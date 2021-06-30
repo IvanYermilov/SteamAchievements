@@ -11,6 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreRateLimit;
+using Microsoft.AspNetCore.HttpOverrides;
+using SteamAchievements.Extensions;
 
 namespace SteamAchievements
 {
@@ -26,12 +29,48 @@ namespace SteamAchievements
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.ConfigureCors();
+            services.ConfigureIISIntegration();
+            //services.ConfigureLoggerService();
+            //services.ConfigureRepositoryManager();
+            //services.Configure<ApiBehaviorOptions>(options =>
+            //{
+            //    options.SuppressModelStateInvalidFilter = true;
+            //});
+            //services.ConfigureSqlContext(Configuration);
+            //services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SteamAchievements", Version = "v1" });
-            });
+            //services.AddControllers(config =>
+            //{
+            //    config.RespectBrowserAcceptHeader = true;
+            //    config.ReturnHttpNotAcceptable = true;
+            //    config.CacheProfiles.Add("120SecondsDuration", new CacheProfile
+            //    {
+            //        Duration = 120
+            //    });
+            //}).AddNewtonsoftJson()
+            //    .AddXmlDataContractSerializerFormatters()
+            //    .AddCustomCSVFormatter();
+            //services.AddCustomMediaTypes();
+            //services.AddScoped<ValidationFilterAttribute>();
+            //services.AddScoped<ValidateCompanyExistsAttribute>();
+            //services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
+            //services.AddScoped<ValidateCompanyForEmployeeExistsAttribute>();
+            //services.AddScoped<ValidateMediaTypeAttribute>();
+            //services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
+            //services.AddScoped<EmployeeLinks>();
+            //services.ConfigureVersioning();
+            //services.ConfigureResponseCaching();
+            //services.ConfigureHttpCacheHeaders();
+            //services.AddMemoryCache();
+            //services.AddInMemoryRateLimiting();
+            //services.ConfigureRateLimitingOptions();
+            //services.AddHttpContextAccessor();
+            //services.AddAuthentication();
+            //services.ConfigureIdentity();
+            //services.ConfigureJWT(Configuration);
+            //services.AddScoped<IAuthenticationManager, AuthenticationManager>();
+            //services.ConfigureSwagger();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,13 +79,34 @@ namespace SteamAchievements
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SteamAchievements v1"));
             }
+            else
+            {
+                app.UseHsts();
+            }
+
+            //app.ConfigureExceptionHandler(logger);
 
             app.UseHttpsRedirection();
 
+            app.UseStaticFiles();
+
+            app.UseCors("CorsPolicy");
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.All
+            });
+
+            //app.UseResponseCaching();
+
+            //app.UseHttpCacheHeaders();
+
+            //app.UseIpRateLimiting();
+
             app.UseRouting();
+
+            //app.UseAuthentication();
 
             app.UseAuthorization();
 
@@ -54,6 +114,13 @@ namespace SteamAchievements
             {
                 endpoints.MapControllers();
             });
+
+            //app.UseSwagger();
+            //app.UseSwaggerUI(s =>
+            //{
+            //    s.SwaggerEndpoint("/swagger/v1/swagger.json", "Steam Achievements API v1");
+            //    s.SwaggerEndpoint("/swagger/v2/swagger.json", "Steam Achievements API v2");
+            //});
         }
     }
 }
