@@ -5,13 +5,17 @@ VisualStudioVersion = 16.0.31313.79
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamAchievements", "SteamAchievements\SteamAchievements.csproj", "{778C85FF-C94A-4815-B07C-834A38609AE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "Contracts\Contracts.csproj", "{288D97A1-DBF7-4177-9E7C-BA2B5888C059}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contracts", "Contracts\Contracts.csproj", "{288D97A1-DBF7-4177-9E7C-BA2B5888C059}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{A5039549-873C-417D-A9C5-5E8856B72F88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{A5039549-873C-417D-A9C5-5E8856B72F88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggerService", "LoggerService\LoggerService.csproj", "{D861D9B8-1385-4E15-8DFC-B8348C1BA099}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoggerService", "LoggerService\LoggerService.csproj", "{D861D9B8-1385-4E15-8DFC-B8348C1BA099}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Repository.csproj", "{A2A2DA50-C9BC-4402-AD89-57F823335E35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repository\Repository.csproj", "{A2A2DA50-C9BC-4402-AD89-57F823335E35}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A5039549-873C-417D-A9C5-5E8856B72F88} = {A5039549-873C-417D-A9C5-5E8856B72F88}
+		{288D97A1-DBF7-4177-9E7C-BA2B5888C059} = {288D97A1-DBF7-4177-9E7C-BA2B5888C059}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

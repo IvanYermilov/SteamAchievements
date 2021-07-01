@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using AspNetCoreRateLimit;
+using Contracts;
+using LoggerService;
 using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -34,8 +36,8 @@ namespace SteamAchievements.Extensions
         public static void ConfigureIISIntegration(this IServiceCollection services) =>
             services.Configure<IISOptions>(options => { });
 
-        //public static void ConfigureLoggerService(this IServiceCollection services) =>
-        //    services.AddScoped<ILoggerManager, LoggerManager>();
+        public static void ConfigureLoggerService(this IServiceCollection services) =>
+            services.AddScoped<ILoggerManager, LoggerManager>();
 
         //public static void ConfigureSqlContext(this IServiceCollection services,
         //    IConfiguration configuration) =>

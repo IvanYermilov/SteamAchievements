@@ -9,10 +9,12 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.HttpOverrides;
+using NLog;
 using SteamAchievements.Extensions;
 
 namespace SteamAchievements
@@ -21,6 +23,7 @@ namespace SteamAchievements
     {
         public Startup(IConfiguration configuration)
         {
+            LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
             Configuration = configuration;
         }
 
@@ -31,7 +34,7 @@ namespace SteamAchievements
         {
             services.ConfigureCors();
             services.ConfigureIISIntegration();
-            //services.ConfigureLoggerService();
+            services.ConfigureLoggerService();
             //services.ConfigureRepositoryManager();
             //services.Configure<ApiBehaviorOptions>(options =>
             //{
