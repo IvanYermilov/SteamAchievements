@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AspNetCoreRateLimit;
 using Contracts;
+using Entities;
 using LoggerService;
 using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,6 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -39,11 +41,11 @@ namespace SteamAchievements.Extensions
         public static void ConfigureLoggerService(this IServiceCollection services) =>
             services.AddScoped<ILoggerManager, LoggerManager>();
 
-        //public static void ConfigureSqlContext(this IServiceCollection services,
-        //    IConfiguration configuration) =>
-        //    services.AddDbContext<RepositoryContext>(opts =>
-        //    opts.UseSqlServer(configuration.GetConnectionString("sqlConnection"), b =>
-        //        b.MigrationsAssembly("CompanyEmployees")));
+        public static void ConfigureSqlContext(this IServiceCollection services,
+            IConfiguration configuration) =>
+            services.AddDbContext<RepositoryContext>(opts =>
+            opts.UseSqlServer(configuration.GetConnectionString("sqlConnection"), b =>
+                b.MigrationsAssembly("SteamAchievements")));
 
         //public static void ConfigureRepositoryManager(this IServiceCollection services) =>
         //    services.AddScoped<IRepositoryManager, RepositoryManager>();

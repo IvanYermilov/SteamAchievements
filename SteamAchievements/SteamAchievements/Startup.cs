@@ -40,7 +40,7 @@ namespace SteamAchievements
             //{
             //    options.SuppressModelStateInvalidFilter = true;
             //});
-            //services.ConfigureSqlContext(Configuration);
+            services.ConfigureSqlContext(Configuration);
             //services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
             //services.AddControllers(config =>
