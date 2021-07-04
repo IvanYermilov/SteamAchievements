@@ -1,21 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using AspNetCoreRateLimit;
-using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
+using SteamAchievements.ActionFilters;
 using SteamAchievements.Extensions;
+using System.IO;
 
 namespace SteamAchievements
 {
@@ -35,13 +27,13 @@ namespace SteamAchievements
             services.ConfigureCors();
             services.ConfigureIISIntegration();
             services.ConfigureLoggerService();
-            //services.ConfigureRepositoryManager();
+            services.ConfigureRepositoryManager();
             //services.Configure<ApiBehaviorOptions>(options =>
             //{
             //    options.SuppressModelStateInvalidFilter = true;
             //});
             services.ConfigureSqlContext(Configuration);
-            //services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
             //services.AddControllers(config =>
             //{
@@ -55,7 +47,7 @@ namespace SteamAchievements
             //    .AddXmlDataContractSerializerFormatters()
             //    .AddCustomCSVFormatter();
             //services.AddCustomMediaTypes();
-            //services.AddScoped<ValidationFilterAttribute>();
+            services.AddScoped<ValidationFilterAttribute>();
             //services.AddScoped<ValidateCompanyExistsAttribute>();
             //services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
             //services.AddScoped<ValidateCompanyForEmployeeExistsAttribute>();
@@ -69,8 +61,8 @@ namespace SteamAchievements
             //services.AddInMemoryRateLimiting();
             //services.ConfigureRateLimitingOptions();
             //services.AddHttpContextAccessor();
-            //services.AddAuthentication();
-            //services.ConfigureIdentity();
+            services.AddAuthentication();
+            services.ConfigureIdentity();
             //services.ConfigureJWT(Configuration);
             //services.AddScoped<IAuthenticationManager, AuthenticationManager>();
             //services.ConfigureSwagger();
@@ -109,7 +101,7 @@ namespace SteamAchievements
 
             app.UseRouting();
 
-            //app.UseAuthentication();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AspNetCoreRateLimit;
 using Contracts;
 using Entities;
+using Entities.Models;
 using LoggerService;
 using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -21,6 +22,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Repository;
 
 namespace SteamAchievements.Extensions
 {
@@ -47,8 +49,8 @@ namespace SteamAchievements.Extensions
             opts.UseSqlServer(configuration.GetConnectionString("sqlConnection"), b =>
                 b.MigrationsAssembly("SteamAchievements")));
 
-        //public static void ConfigureRepositoryManager(this IServiceCollection services) =>
-        //    services.AddScoped<IRepositoryManager, RepositoryManager>();
+        public static void ConfigureRepositoryManager(this IServiceCollection services) =>
+            services.AddScoped<IRepositoryManager, RepositoryManager>();
 
         //public static IMvcBuilder AddCustomCSVFormatter(this IMvcBuilder builder) =>
         //    builder.AddMvcOptions(config => config.OutputFormatters.Add(new
@@ -133,21 +135,21 @@ namespace SteamAchievements.Extensions
             services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
         }
 
-        //public static void ConfigureIdentity(this IServiceCollection services)
-        //{
-        //    var builder = services.AddIdentityCore<User>(o =>
-        //    {
-        //        o.Password.RequireDigit = true;
-        //        o.Password.RequireLowercase = false;
-        //        o.Password.RequireUppercase = false;
-        //        o.Password.RequireNonAlphanumeric = false;
-        //        o.Password.RequiredLength = 10;
-        //        o.User.RequireUniqueEmail = true;
-        //    });
+        public static void ConfigureIdentity(this IServiceCollection services)
+        {
+            var builder = services.AddIdentityCore<User>(o =>
+            {
+                o.Password.RequireDigit = true;
+                o.Password.RequireLowercase = false;
+                o.Password.RequireUppercase = false;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequiredLength = 10;
+                o.User.RequireUniqueEmail = true;
+            });
 
-        //    builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
-        //    builder.AddEntityFrameworkStores<RepositoryContext>().AddDefaultTokenProviders();
-        //}
+            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
+            builder.AddEntityFrameworkStores<RepositoryContext>().AddDefaultTokenProviders();
+        }
 
         //public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         //{
