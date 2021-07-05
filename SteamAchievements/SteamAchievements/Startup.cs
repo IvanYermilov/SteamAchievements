@@ -50,7 +50,7 @@ namespace SteamAchievements
             services.AddScoped<ValidationFilterAttribute>();
             //services.AddScoped<ValidateCompanyExistsAttribute>();
             //services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
-            //services.AddScoped<ValidateCompanyForEmployeeExistsAttribute>();
+            services.AddScoped<ValidateDeveloperForGameExistsAttribute>();
             //services.AddScoped<ValidateMediaTypeAttribute>();
             //services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
             //services.AddScoped<EmployeeLinks>();

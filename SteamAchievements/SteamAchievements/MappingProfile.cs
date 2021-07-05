@@ -8,16 +8,16 @@ namespace SteamAchievements
     {
         public MappingProfile()
         {
-            //CreateMap<Company, CompanyDto>()
-            //    .ForMember(c => c.FullAddress,
-            //        opt => opt
-            //            .MapFrom(x => string.Join(' ', x.Address, x.Country)));
+            CreateMap<Developer, DeveloperDto>()
+                .ForMember(c => c.FullAddress,
+                    opt => opt
+                        .MapFrom(x => string.Join(' ', x.Address, x.Country)));
 
-            //CreateMap<Employee, EmployeeDto>();
+            CreateMap<DeveloperForCreationDto, Developer>();
 
-            //CreateMap<CompanyForCreationDto, Company>();
+            CreateMap<Game, GameDto>();
 
-            //CreateMap<EmployeeForCreationDto, Employee>();
+            CreateMap<GameForCreationDto, Game>();
 
             //CreateMap<EmployeeForUpdateDto, Employee>();
 
@@ -26,6 +26,7 @@ namespace SteamAchievements
             //CreateMap<CompanyForUpdateDto, Company>();
 
             CreateMap<UserForRegistrationDto, User>();
+            CreateMap<User, UserDto>();
         }
 
     }

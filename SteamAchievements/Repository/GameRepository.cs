@@ -14,5 +14,7 @@ namespace Repository
         public GameRepository(RepositoryContext repositoryContext) : base(repositoryContext)
         {
         }
+
+        public void CreateGameForDeveloper(Developer developer, Game game) => Create(game);
     }
 }
