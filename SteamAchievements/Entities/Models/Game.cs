@@ -16,6 +16,6 @@ namespace Entities.Models
         public string Description { get; set; }
         public ICollection<User> Users { get; set; }
         public ICollection<Achievement> Achievements { get; set; }
-        public ICollection<Developer> Developers { get; set; }
+        public ICollection<Developer> Developers { get; set; } = new List<Developer>();
     }
 }

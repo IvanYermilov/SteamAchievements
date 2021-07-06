@@ -48,8 +48,8 @@ namespace SteamAchievements
             //    .AddCustomCSVFormatter();
             //services.AddCustomMediaTypes();
             services.AddScoped<ValidationFilterAttribute>();
-            //services.AddScoped<ValidateCompanyExistsAttribute>();
-            //services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
+            services.AddScoped<ValidateDeveloperExistsAttribute>();
+            services.AddScoped<ValidateGameForDeveloperExistsAttribute>();
             services.AddScoped<ValidateDeveloperForGameExistsAttribute>();
             //services.AddScoped<ValidateMediaTypeAttribute>();
             //services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();

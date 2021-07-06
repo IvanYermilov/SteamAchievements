@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Contracts;
 using Entities;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
@@ -15,6 +16,15 @@ namespace Repository
         {
         }
 
+        public async Task<IEnumerable<Game>> GetGamesAsync(Guid developerId, bool trackChanges) =>
+            await FindByCondition(g => g.Developers.Any(d => d.Id.Equals(developerId)), trackChanges)
+                .OrderBy(g => g.Name)
+                .ToListAsync();
         public void CreateGameForDeveloper(Developer developer, Game game) => Create(game);
+        public async Task<Game> GetGameAsync(Guid developerId, Guid id, bool trackChanges) =>
+            await FindByCondition(g => g.Developers.FirstOrDefault(d => d.Id == developerId) != null 
+                                       && g.Id.Equals(id), trackChanges)
+                .SingleOrDefaultAsync();
+        public void DeleteGame(Game game) => Delete(game);
     }
 }
