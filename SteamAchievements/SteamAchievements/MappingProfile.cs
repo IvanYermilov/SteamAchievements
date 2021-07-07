@@ -9,7 +9,7 @@ namespace SteamAchievements
         public MappingProfile()
         {
             CreateMap<Developer, DeveloperDto>()
-                .ForMember(c => c.FullAddress,
+                .ForMember(d => d.FullAddress,
                     opt => opt
                         .MapFrom(x => string.Join(' ', x.Address, x.Country)));
 
@@ -18,6 +18,10 @@ namespace SteamAchievements
             CreateMap<Game, GameDto>();
 
             CreateMap<GameForCreationDto, Game>();
+
+            CreateMap<Achievement, AchievementDto>();
+
+            CreateMap<AchievementForCreationDto, Achievement>();
 
             //CreateMap<EmployeeForUpdateDto, Employee>();
 

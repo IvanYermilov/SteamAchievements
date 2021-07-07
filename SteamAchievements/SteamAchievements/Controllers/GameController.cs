@@ -67,8 +67,12 @@ namespace SteamAchievements.Controllers
             var developerForGame = HttpContext.Items["developer"] as Developer;
             developerForGame.Games.Add(gameEntity);
             await _repository.SaveAsync();
-
-            return Ok();
+            var gameToReturn = _mapper.Map<GameDto>(gameEntity);
+            return CreatedAtRoute("GetGameForDeveloper", new
+            {
+                developerId,
+                id = gameToReturn.Id
+            }, gameToReturn);
         }
 
         [HttpDelete("{id}")]

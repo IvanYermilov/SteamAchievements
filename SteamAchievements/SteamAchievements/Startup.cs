@@ -8,6 +8,7 @@ using NLog;
 using SteamAchievements.ActionFilters;
 using SteamAchievements.Extensions;
 using System.IO;
+using Contracts;
 
 namespace SteamAchievements
 {
@@ -51,6 +52,7 @@ namespace SteamAchievements
             services.AddScoped<ValidateDeveloperExistsAttribute>();
             services.AddScoped<ValidateGameForDeveloperExistsAttribute>();
             services.AddScoped<ValidateDeveloperForGameExistsAttribute>();
+            services.AddScoped<ValidateGamerForAchievementExistsAttribute>();
             //services.AddScoped<ValidateMediaTypeAttribute>();
             //services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
             //services.AddScoped<EmployeeLinks>();
@@ -69,7 +71,7 @@ namespace SteamAchievements
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerManager logger)
         {
             if (env.IsDevelopment())
             {
@@ -80,7 +82,7 @@ namespace SteamAchievements
                 app.UseHsts();
             }
 
-            //app.ConfigureExceptionHandler(logger);
+            app.ConfigureExceptionHandler(logger);
 
             app.UseHttpsRedirection();
 

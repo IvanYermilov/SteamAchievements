@@ -20,7 +20,6 @@ namespace Repository
             await FindByCondition(g => g.Developers.Any(d => d.Id.Equals(developerId)), trackChanges)
                 .OrderBy(g => g.Name)
                 .ToListAsync();
-        public void CreateGameForDeveloper(Developer developer, Game game) => Create(game);
         public async Task<Game> GetGameAsync(Guid developerId, Guid id, bool trackChanges) =>
             await FindByCondition(g => g.Developers.FirstOrDefault(d => d.Id == developerId) != null 
                                        && g.Id.Equals(id), trackChanges)

@@ -10,7 +10,6 @@ namespace Contracts
     public interface IGameRepository
     {
         Task<IEnumerable<Game>> GetGamesAsync(Guid developerId, bool trackChanges);
-        void CreateGameForDeveloper(Developer developer, Game game);
         Task<Game> GetGameAsync(Guid developerId, Guid id, bool trackChanges);
         void DeleteGame(Game game);
     }
