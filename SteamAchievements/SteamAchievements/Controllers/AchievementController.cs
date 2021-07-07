@@ -30,7 +30,7 @@ namespace SteamAchievements.Controllers
         [ServiceFilter(typeof(ValidateGamerForAchievementExistsAttribute))]
         public async Task<IActionResult> GetAchievementForGame(Guid gameId, Guid id)
         {
-            var achievementDb = await _repository.Game.GetGameAsync(gameId, id, trackChanges: false);
+            var achievementDb = await _repository.Achievement.GetAchievementAsync(gameId, id, trackChanges: false);
 
             if (achievementDb == null)
             {
