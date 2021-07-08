@@ -73,7 +73,7 @@ namespace SteamAchievements.Controllers
 
         [HttpPost(Name = "CreateDeveloper")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> CreateCompany([FromBody] DeveloperForCreationDto developer)
+        public async Task<IActionResult> CreateDeveloper([FromBody] DeveloperForCreationDto developer)
         {
             var developerEntity = _mapper.Map<Developer>(developer);
 

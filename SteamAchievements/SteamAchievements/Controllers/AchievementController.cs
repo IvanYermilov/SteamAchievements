@@ -28,36 +28,26 @@ namespace SteamAchievements.Controllers
 
         [HttpGet("{id}", Name = "GetAchievementForGame")]
         [ServiceFilter(typeof(ValidateGamerForAchievementExistsAttribute))]
+        [ServiceFilter(typeof(ValidateAchievementExistsAttribute))]
         public async Task<IActionResult> GetAchievementForGame(Guid gameId, Guid id)
         {
-            var achievementDb = await _repository.Achievement.GetAchievementAsync(gameId, id, trackChanges: false);
+            var achievementForGame = HttpContext.Items["achievement"] as Achievement;
 
-            if (achievementDb == null)
-            {
-                _logger.LogInfo($"Achievement with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
-
-            var achievement = _mapper.Map<AchievementDto>(achievementDb);
+            var achievement = _mapper.Map<AchievementDto>(achievementForGame);
 
             return Ok(achievement);
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetGamesForDeveloper(Guid developerId)
-        //{
-        //    var developer = await _repository.Developer.GetDeveloperAsync(developerId, trackChanges: false);
-        //    if (developer == null)
-        //    {
-        //        _logger.LogInfo($"Developer with id: {developerId} doesn't exist in the database.");
-        //        return NotFound();
-        //    }
-        //    var gamesFromDb = await _repository.Game.GetGamesAsync(developerId, trackChanges: false);
+        [HttpGet]
+        [ServiceFilter(typeof(ValidateGamerForAchievementExistsAttribute))]
+        public async Task<IActionResult> GetAchievementsForGame(Guid gameId)
+        {
+            var achievementFromDb = await _repository.Achievement.GetAchievementsAsync(gameId, trackChanges: false);
 
-        //    var gamesDto = _mapper.Map<IEnumerable<GameDto>>(gamesFromDb);
+            var achievementsDto = _mapper.Map<IEnumerable<AchievementDto>>(achievementFromDb);
 
-        //    return Ok(gamesDto);
-        //}
+            return Ok(achievementsDto);
+        }
 
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
@@ -76,14 +66,15 @@ namespace SteamAchievements.Controllers
         }
 
 
-        //[HttpDelete("{id}")]
-        //[ServiceFilter(typeof(ValidateGameForDeveloperExistsAttribute))]
-        //public async Task<IActionResult> DeleteGameForDeveloper(Guid developerId, Guid id)
-        //{
-        //    var gameForDeveloper = HttpContext.Items["game"] as Game;
-        //    _repository.Game.DeleteGame(gameForDeveloper);
-        //    await _repository.SaveAsync();
-        //    return NoContent();
-        //}
+        [HttpDelete("{id}")]
+        [ServiceFilter(typeof(ValidateGamerForAchievementExistsAttribute))]
+        [ServiceFilter(typeof(ValidateAchievementExistsAttribute))]
+        public async Task<IActionResult> DeleteAchievementForGame(Guid gameId, Guid id)
+        {
+            var achievementForGame = HttpContext.Items["achievement"] as Achievement;
+            _repository.Achievement.DeleteAchievement(achievementForGame);
+            await _repository.SaveAsync();
+            return NoContent();
+        }
     }
 }

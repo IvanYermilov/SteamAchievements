@@ -3,9 +3,12 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SteamAchievements.ActionFilters;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace SteamAchievements.Controllers
@@ -27,7 +30,7 @@ namespace SteamAchievements.Controllers
 
         [HttpGet("{id}", Name = "GetGameForDeveloper")]
         [ServiceFilter(typeof(ValidateDeveloperForGameExistsAttribute))]
-        public async Task<IActionResult> GetGameForCompany(Guid developerId, Guid id)
+        public async Task<IActionResult> GetGameForDeveloper(Guid developerId, Guid id)
         {
             var gameDb = await _repository.Game.GetGameAsync(developerId, id, trackChanges: false);
 
@@ -37,9 +40,9 @@ namespace SteamAchievements.Controllers
                 return NotFound();
             }
 
-            var employee = _mapper.Map<GameDto>(gameDb);
+            var game = _mapper.Map<GameDto>(gameDb);
 
-            return Ok(employee);
+            return Ok(game);
         }
 
         [HttpGet]
@@ -79,7 +82,29 @@ namespace SteamAchievements.Controllers
         [ServiceFilter(typeof(ValidateGameForDeveloperExistsAttribute))]
         public async Task<IActionResult> DeleteGameForDeveloper(Guid developerId, Guid id)
         {
+            HttpClient client = new HttpClient();
             var gameForDeveloper = HttpContext.Items["game"] as Game;
+            IEnumerable<Achievement> achievements = default;
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync($"https://localhost:5001/api/games/{id}/achievements");
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                var achievementsDto = JsonConvert.DeserializeObject<IEnumerable<AchievementDto>>(responseBody);
+                achievements = _mapper.Map<IEnumerable<Achievement>>(achievementsDto);
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("\nException Caught!");
+                Console.WriteLine("Message :{0} ", e.Message);
+            }
+
+            foreach (var achievement in achievements)
+            {   
+
+                 _repository.Achievement.DeleteAchievement(achievement);
+            }
+            
             _repository.Game.DeleteGame(gameForDeveloper);
             await _repository.SaveAsync();
             return NoContent();

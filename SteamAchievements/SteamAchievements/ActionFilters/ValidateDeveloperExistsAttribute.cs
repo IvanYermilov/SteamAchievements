@@ -25,6 +25,7 @@ namespace SteamAchievements.ActionFilters
             {
                 _logger.LogInfo($"Developer with id: {id} doesn't exist in the database.");
                 context.Result = new NotFoundResult();
+                return;
             }
             else
             {

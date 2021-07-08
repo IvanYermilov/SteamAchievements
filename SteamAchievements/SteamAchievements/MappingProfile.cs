@@ -21,6 +21,8 @@ namespace SteamAchievements
 
             CreateMap<Achievement, AchievementDto>();
 
+            CreateMap<Achievement, AchievementDto>().ReverseMap();
+
             CreateMap<AchievementForCreationDto, Achievement>();
 
             //CreateMap<EmployeeForUpdateDto, Employee>();
