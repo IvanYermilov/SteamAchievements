@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Entities.DataTransferObjects
 {
-    public class GameForCreationDto : GameForManipulationDto
+    public class DeveloperForCreationDto : DeveloperForManipulationDto
     {
     }
 }

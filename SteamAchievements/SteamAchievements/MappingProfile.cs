@@ -25,11 +25,13 @@ namespace SteamAchievements
 
             CreateMap<AchievementForCreationDto, Achievement>();
 
-            //CreateMap<EmployeeForUpdateDto, Employee>();
+            CreateMap<DeveloperForUpdateDto, Developer>();
 
-            //CreateMap<EmployeeForUpdateDto, Employee>().ReverseMap();
+            CreateMap<DeveloperForUpdateDto, Developer>().ReverseMap();
 
-            //CreateMap<CompanyForUpdateDto, Company>();
+            CreateMap<GameForUpdateDto, Game>();
+
+            CreateMap<GameForUpdateDto, Game>().ReverseMap();
 
             CreateMap<UserForRegistrationDto, User>();
             CreateMap<User, UserDto>();

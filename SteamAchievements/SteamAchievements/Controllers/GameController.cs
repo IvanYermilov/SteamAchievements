@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace SteamAchievements.Controllers
 {
@@ -76,6 +77,71 @@ namespace SteamAchievements.Controllers
                 developerId,
                 id = gameToReturn.Id
             }, gameToReturn);
+        }
+
+        [HttpPost("add-to-developer-game-with/{id}")]
+        [ServiceFilter(typeof(ValidateGameExistsAttribute))]
+        public async Task<IActionResult> CreateGameForDeveloper(Guid developerId, Guid id)
+        {
+
+            var gameEntity = HttpContext.Items["game"] as Game;
+            DeveloperDto developerDto = default;
+            Developer developer = default;
+            HttpClient client = new HttpClient();
+
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync($"https://localhost:5001/api/developers/{developerId}");
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                developerDto = JsonConvert.DeserializeObject<DeveloperDto>(responseBody);
+                if (developerDto == null)
+                {
+                    _logger.LogInfo($"Developer with id: {id} doesn't exist.");
+                    return NotFound();
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("\nException Caught!");
+                Console.WriteLine("Message :{0} ", e.Message);
+            }
+
+            developer = await _repository.Developer.GetDeveloperAsync(developerDto.Id, false);
+            gameEntity.Developers.Add(developer);
+            await _repository.SaveAsync();
+            return Ok();
+        }
+
+        [HttpPatch("{id}")]
+        [ServiceFilter(typeof(ValidateGameForDeveloperExistsAttribute))]
+        public async Task<IActionResult> PartiallyUpdateEmployeeForCompany(Guid developerId, Guid id, [FromBody] JsonPatchDocument<GameForUpdateDto> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                _logger.LogError("patchDoc object sent from client is null.");
+                return BadRequest("patchDoc object is null");
+            }
+
+            var gameEntity = HttpContext.Items["game"] as Game;
+
+            var gameToPatch = _mapper.Map<GameForUpdateDto>(gameEntity);
+
+            patchDoc.ApplyTo(gameToPatch, ModelState);
+
+            TryValidateModel(gameToPatch);
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the patch document");
+                return UnprocessableEntity(ModelState);
+            }
+
+            _mapper.Map(gameToPatch, gameEntity);
+
+            await _repository.SaveAsync();
+
+            return NoContent();
         }
 
         [HttpDelete("{id}")]

@@ -36,16 +36,16 @@ namespace SteamAchievements
             services.ConfigureSqlContext(Configuration);
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
-            //services.AddControllers(config =>
-            //{
-            //    config.RespectBrowserAcceptHeader = true;
-            //    config.ReturnHttpNotAcceptable = true;
-            //    config.CacheProfiles.Add("120SecondsDuration", new CacheProfile
-            //    {
-            //        Duration = 120
-            //    });
-            //}).AddNewtonsoftJson()
-            //    .AddXmlDataContractSerializerFormatters()
+            services.AddControllers(config =>
+            {
+                config.RespectBrowserAcceptHeader = true;
+                //    config.ReturnHttpNotAcceptable = true;
+                //    config.CacheProfiles.Add("120SecondsDuration", new CacheProfile
+                //    {
+                //        Duration = 120
+                //    });
+            }).AddNewtonsoftJson()
+            .AddXmlDataContractSerializerFormatters();
             //    .AddCustomCSVFormatter();
             //services.AddCustomMediaTypes();
             services.AddScoped<ValidationFilterAttribute>();
@@ -54,6 +54,7 @@ namespace SteamAchievements
             services.AddScoped<ValidateDeveloperForGameExistsAttribute>();
             services.AddScoped<ValidateGamerForAchievementExistsAttribute>();
             services.AddScoped<ValidateAchievementExistsAttribute>();
+            services.AddScoped<ValidateGameExistsAttribute>();
             //services.AddScoped<ValidateMediaTypeAttribute>();
             //services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
             //services.AddScoped<EmployeeLinks>();
