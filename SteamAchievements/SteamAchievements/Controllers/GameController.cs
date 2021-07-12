@@ -144,6 +144,41 @@ namespace SteamAchievements.Controllers
             return NoContent();
         }
 
+        [HttpDelete("delete-from-developer-game-with/{id}")]
+        [ServiceFilter(typeof(ValidateGameExistsAttribute))]
+        public async Task<IActionResult> DetachGameForDeveloper(Guid developerId, Guid id)
+        {
+
+            var gameEntity = HttpContext.Items["game"] as Game;
+            Game game;
+            Developer developer = default;
+            HttpClient client = new HttpClient();
+
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync($"https://localhost:5001/api/developers/{developerId}");
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                var developerDto = JsonConvert.DeserializeObject<DeveloperDto>(responseBody);
+                if (developerDto == null)
+                {
+                    _logger.LogInfo($"Developer with id: {id} doesn't exist.");
+                    return NotFound();
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("\nException Caught!");
+                Console.WriteLine("Message :{0} ", e.Message);
+            }
+
+            game = await _repository.Game.GetGameAsync(developerId, id, true);
+            developer = await _repository.Developer.GetDeveloperAsync(developerId, true);
+            game.Developers.Remove(developer);
+            await _repository.SaveAsync();
+            return Ok();
+        }
+
         [HttpDelete("{id}")]
         [ServiceFilter(typeof(ValidateGameForDeveloperExistsAttribute))]
         public async Task<IActionResult> DeleteGameForDeveloper(Guid developerId, Guid id)

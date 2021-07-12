@@ -17,10 +17,10 @@ namespace Entities.Models
         [MaxLength(30, ErrorMessage = "Maximum length for the Name is 30 characters.")]
         public string Name { get; set; }
         public string Description { get; set; }
-        public ICollection<User> Users { get; set; }
+        public virtual ICollection<User> Users { get; set; }
         
         [ForeignKey(nameof(Game))]
         public Guid GameId { get; set; }
-        public Game Game { get; set; }
+        public virtual Game Game { get; set; }
     }
 }
