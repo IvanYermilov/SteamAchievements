@@ -18,12 +18,6 @@ namespace Entities
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder
-                .UseLazyLoadingProxies();
-        }
-
         public DbSet<Achievement> Achievements { get; set; }
         public DbSet<Developer> Developer { get; set; }
         public DbSet<Game> Games { get; set; }

@@ -90,27 +90,10 @@ namespace SteamAchievements.Controllers
         [ServiceFilter(typeof(ValidateDeveloperExistsAttribute))]
         public async Task<IActionResult> DeleteDeveloper(Guid id)
         {
-            HttpClient client = new HttpClient();
             var developer = HttpContext.Items["developer"] as Developer;
-            IEnumerable<Game> games = default;
-
-            try
+            foreach (var game in developer.Games)
             {
-                HttpResponseMessage response = await client.GetAsync($"https://localhost:5001/api/developers/{id}/games");
-                response.EnsureSuccessStatusCode();
-                string responseBody = await response.Content.ReadAsStringAsync();
-                games = JsonConvert.DeserializeObject<IEnumerable<Game>>(responseBody);
-            }
-            catch (HttpRequestException e)
-            {
-                Console.WriteLine("\nException Caught!");
-                Console.WriteLine("Message :{0} ", e.Message);
-            }
-
-            foreach (var game in games)
-            {
-                var developersForGame = _repository.Developer.GetDevelopersForGameAsync(game.Id, trackChanges: false).Result;
-                if (developersForGame.Count() == 1 && developersForGame.Any(d => d.Id.Equals(developer.Id))) _repository.Game.DeleteGame(game);
+                if (game.Developers.Count() == 1 && game.Developers.Any(d => d.Id.Equals(developer.Id))) _repository.Game.DeleteGame(game);
             }
             _repository.Developer.DeleteDeveloper(developer);
             await _repository.SaveAsync();

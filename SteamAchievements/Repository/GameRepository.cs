@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Contracts;
+﻿using Contracts;
 using Entities;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Repository
 {
@@ -21,10 +20,16 @@ namespace Repository
                 .OrderBy(g => g.Name)
                 .ToListAsync();
 
-        public async Task<IEnumerable<Game>> GetGamesforDeveloper(Guid devId)
+        public async Task<IEnumerable<Game>> GetGamesForDeveloper(Guid devId)
         {
-            //return await RepositoryContext.Developer.FirstOrDefault(d => d.Id.Equals(devId)).Select(d => d.Games).ToListAsync();
             return await RepositoryContext.Games.Where(g => g.Developers.Any(d => d.Id == devId)).Include(g => g.Developers).ToListAsync();
+        } 
+        
+        public async Task<Game> GetGameById(Guid gameId, bool trackChanges)
+        {
+            return await FindByCondition(g => g.Id == gameId, trackChanges)
+                .Include(g => g.Developers)
+                .SingleOrDefaultAsync();
         }
 
         public async Task<Game> GetGameAsync(Guid developerId, Guid id, bool trackChanges) =>

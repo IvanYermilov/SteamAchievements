@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Entities.DataTransferObjects;
+using Entities.Models;
 using Newtonsoft.Json;
 
 namespace SteamAchievements.ActionFilters
@@ -25,31 +26,7 @@ namespace SteamAchievements.ActionFilters
         {
             Guid developerId;
             var gameId = (Guid) context.ActionArguments["id"];
-            var method = context.HttpContext.Request.Method;
-            IEnumerable<DeveloperDto> developers = default;
-            HttpClient client = new HttpClient();
-
-            try
-            {
-                HttpResponseMessage response = await client.GetAsync($"https://localhost:5001/api/developers/for-game-by/{gameId}");
-                response.EnsureSuccessStatusCode();
-                string responseBody = await response.Content.ReadAsStringAsync();
-                developers = JsonConvert.DeserializeObject<IEnumerable<DeveloperDto>>(responseBody);
-                if (developers.Count().Equals(0) || developers == null)
-                {
-                    _logger.LogInfo($"Game with id: {gameId} doesn't have any Developer.");
-                    context.Result = new NotFoundResult();
-                    return;
-                }
-            }
-            catch (HttpRequestException e)
-            {
-                Console.WriteLine("\nException Caught!");
-                Console.WriteLine("Message :{0} ", e.Message);
-            }
-
-            developerId = developers.FirstOrDefault().Id;
-            var game = await _repository.Game.GetGameAsync(developerId, gameId, true);
+            var game = await _repository.Game.GetGameById(gameId, true);
             
             if (game == null)
             {
@@ -62,7 +39,6 @@ namespace SteamAchievements.ActionFilters
                 context.HttpContext.Items.Add("game", game);
                 await next();
             }
-
         }
     }
 }

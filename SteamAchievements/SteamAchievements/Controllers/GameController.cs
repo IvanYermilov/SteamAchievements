@@ -57,7 +57,7 @@ namespace SteamAchievements.Controllers
             }
             var gamesFromDb = await _repository.Game.GetGamesAsync(developerId, trackChanges: false);
 
-            IEnumerable<Game> games = await _repository.Game.GetGamesforDeveloper(developerId);
+            IEnumerable<Game> games = await _repository.Game.GetGamesForDeveloper(developerId);
 
             var gamesDto = _mapper.Map<IEnumerable<GameDto>>(gamesFromDb);
 
@@ -83,33 +83,11 @@ namespace SteamAchievements.Controllers
 
         [HttpPost("add-to-developer-game-with/{id}")]
         [ServiceFilter(typeof(ValidateGameExistsAttribute))]
-        public async Task<IActionResult> CreateGameForDeveloper(Guid developerId, Guid id)
+        public async Task<IActionResult> AddGameForDeveloper(Guid developerId, Guid id)
         {
 
             var gameEntity = HttpContext.Items["game"] as Game;
-            DeveloperDto developerDto = default;
-            Developer developer = default;
-            HttpClient client = new HttpClient();
-
-            try
-            {
-                HttpResponseMessage response = await client.GetAsync($"https://localhost:5001/api/developers/{developerId}");
-                response.EnsureSuccessStatusCode();
-                string responseBody = await response.Content.ReadAsStringAsync();
-                developerDto = JsonConvert.DeserializeObject<DeveloperDto>(responseBody);
-                if (developerDto == null)
-                {
-                    _logger.LogInfo($"Developer with id: {id} doesn't exist.");
-                    return NotFound();
-                }
-            }
-            catch (HttpRequestException e)
-            {
-                Console.WriteLine("\nException Caught!");
-                Console.WriteLine("Message :{0} ", e.Message);
-            }
-
-            developer = await _repository.Developer.GetDeveloperAsync(developerDto.Id, false);
+            Developer developer = await _repository.Developer.GetDeveloperAsync(developerId, true);
             gameEntity.Developers.Add(developer);
             await _repository.SaveAsync();
             return Ok();
