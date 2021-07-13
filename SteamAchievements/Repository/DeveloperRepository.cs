@@ -31,5 +31,6 @@ namespace Repository
                 .ToListAsync();
 
         public void DeleteDeveloper(Developer developer) => Delete(developer);
+
     }
 }

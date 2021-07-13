@@ -57,6 +57,8 @@ namespace SteamAchievements.Controllers
             }
             var gamesFromDb = await _repository.Game.GetGamesAsync(developerId, trackChanges: false);
 
+            IEnumerable<Game> games = await _repository.Game.GetGamesforDeveloper(developerId);
+
             var gamesDto = _mapper.Map<IEnumerable<GameDto>>(gamesFromDb);
 
             return Ok(gamesDto);
