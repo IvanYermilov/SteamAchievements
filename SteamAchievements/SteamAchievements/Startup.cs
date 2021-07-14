@@ -52,8 +52,7 @@ namespace SteamAchievements
             services.AddScoped<ValidateDeveloperExistsAttribute>();
             services.AddScoped<ValidateGameForDeveloperExistsAttribute>();
             services.AddScoped<ValidateDeveloperForGameExistsAttribute>();
-            services.AddScoped<ValidateGamerForAchievementExistsAttribute>();
-            services.AddScoped<ValidateAchievementExistsAttribute>();
+            services.AddScoped<ValidateAchievementForGameExistsAttribute>();
             services.AddScoped<ValidateGameExistsAttribute>();
             //services.AddScoped<ValidateMediaTypeAttribute>();
             //services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();

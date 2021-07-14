@@ -29,15 +29,15 @@ namespace SteamAchievements.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("{id}", Name = "GetGameForDeveloper")]
+        [HttpGet("{gameId}", Name = "GetGameForDeveloper")]
         [ServiceFilter(typeof(ValidateDeveloperForGameExistsAttribute))]
-        public async Task<IActionResult> GetGameForDeveloper(Guid developerId, Guid id)
+        public async Task<IActionResult> GetGameForDeveloper(Guid developerId, Guid gameId)
         {
-            var gameDb = await _repository.Game.GetGameAsync(developerId, id, trackChanges: false);
+            var gameDb = await _repository.Game.GetGameAsync(developerId, gameId, trackChanges: false);
 
             if (gameDb == null)
             {
-                _logger.LogInfo($"Game with id: {id} doesn't exist in the database.");
+                _logger.LogInfo($"Game with id: {gameId} doesn't exist in the database.");
                 return NotFound();
             }
 
@@ -81,9 +81,9 @@ namespace SteamAchievements.Controllers
             }, gameToReturn);
         }
 
-        [HttpPost("add-to-developer-game-with/{id}")]
+        [HttpPost("add-to-developer-game-with/{gameId}")]
         [ServiceFilter(typeof(ValidateGameExistsAttribute))]
-        public async Task<IActionResult> AddGameForDeveloper(Guid developerId, Guid id)
+        public async Task<IActionResult> AddGameForDeveloper(Guid developerId, Guid gameId)
         {
 
             var gameEntity = HttpContext.Items["game"] as Game;
@@ -93,9 +93,9 @@ namespace SteamAchievements.Controllers
             return Ok();
         }
 
-        [HttpPatch("{id}")]
+        [HttpPatch("{gameId}")]
         [ServiceFilter(typeof(ValidateGameForDeveloperExistsAttribute))]
-        public async Task<IActionResult> PartiallyUpdateEmployeeForCompany(Guid developerId, Guid id, [FromBody] JsonPatchDocument<GameForUpdateDto> patchDoc)
+        public async Task<IActionResult> PartiallyUpdateEmployeeForCompany(Guid developerId, Guid gameId, [FromBody] JsonPatchDocument<GameForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
             {
@@ -124,9 +124,9 @@ namespace SteamAchievements.Controllers
             return NoContent();
         }
 
-        [HttpDelete("delete-from-developer-game-with/{id}")]
+        [HttpDelete("delete-from-developer-game-with/{gameId}")]
         [ServiceFilter(typeof(ValidateGameExistsAttribute))]
-        public async Task<IActionResult> DetachGameForDeveloper(Guid developerId, Guid id)
+        public async Task<IActionResult> DetachGameForDeveloper(Guid developerId, Guid gameId)
         {
 
             var gameEntity = HttpContext.Items["game"] as Game;
@@ -142,7 +142,7 @@ namespace SteamAchievements.Controllers
                 var developerDto = JsonConvert.DeserializeObject<DeveloperDto>(responseBody);
                 if (developerDto == null)
                 {
-                    _logger.LogInfo($"Developer with id: {id} doesn't exist.");
+                    _logger.LogInfo($"Developer with id: {gameId} doesn't exist.");
                     return NotFound();
                 }
             }
@@ -152,23 +152,23 @@ namespace SteamAchievements.Controllers
                 Console.WriteLine("Message :{0} ", e.Message);
             }
 
-            game = await _repository.Game.GetGameAsync(developerId, id, true);
+            game = await _repository.Game.GetGameAsync(developerId, gameId, true);
             developer = await _repository.Developer.GetDeveloperAsync(developerId, true);
             game.Developers.Remove(developer);
             await _repository.SaveAsync();
             return Ok();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{gameId}")]
         [ServiceFilter(typeof(ValidateGameForDeveloperExistsAttribute))]
-        public async Task<IActionResult> DeleteGameForDeveloper(Guid developerId, Guid id)
+        public async Task<IActionResult> DeleteGameForDeveloper(Guid developerId, Guid gameId)
         {
             HttpClient client = new HttpClient();
             var gameForDeveloper = HttpContext.Items["game"] as Game;
             IEnumerable<Achievement> achievements = default;
             try
             {
-                HttpResponseMessage response = await client.GetAsync($"https://localhost:5001/api/games/{id}/achievements");
+                HttpResponseMessage response = await client.GetAsync($"https://localhost:5001/api/games/{gameId}/achievements");
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
                 var achievementsDto = JsonConvert.DeserializeObject<IEnumerable<AchievementDto>>(responseBody);

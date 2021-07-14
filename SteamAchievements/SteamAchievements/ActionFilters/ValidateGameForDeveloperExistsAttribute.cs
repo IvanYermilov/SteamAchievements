@@ -33,7 +33,7 @@ namespace SteamAchievements.ActionFilters
                 return;
             }
 
-            var id = (Guid)context.ActionArguments["id"];
+            var id = (Guid)context.ActionArguments["gameId"];
             var game = await _repository.Game.GetGameAsync(developerId, id, trackChanges);
 
             if (game == null)

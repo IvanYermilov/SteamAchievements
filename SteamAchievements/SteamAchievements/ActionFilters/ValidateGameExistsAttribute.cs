@@ -24,8 +24,7 @@ namespace SteamAchievements.ActionFilters
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            Guid developerId;
-            var gameId = (Guid) context.ActionArguments["id"];
+            var gameId = (Guid) context.ActionArguments["gameId"];
             var game = await _repository.Game.GetGameById(gameId, true);
             
             if (game == null)
@@ -34,11 +33,9 @@ namespace SteamAchievements.ActionFilters
                 context.Result = new NotFoundResult();
                 return;
             }
-            else
-            {
-                context.HttpContext.Items.Add("game", game);
-                await next();
-            }
+
+            context.HttpContext.Items.Add("game", game);
+            await next();
         }
     }
 }

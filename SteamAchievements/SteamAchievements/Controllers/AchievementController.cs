@@ -27,8 +27,7 @@ namespace SteamAchievements.Controllers
         }
 
         [HttpGet("{id}", Name = "GetAchievementForGame")]
-        [ServiceFilter(typeof(ValidateGamerForAchievementExistsAttribute))]
-        [ServiceFilter(typeof(ValidateAchievementExistsAttribute))]
+        [ServiceFilter(typeof(ValidateAchievementForGameExistsAttribute))]
         public async Task<IActionResult> GetAchievementForGame(Guid gameId, Guid id)
         {
             var achievementForGame = HttpContext.Items["achievement"] as Achievement;
@@ -39,19 +38,21 @@ namespace SteamAchievements.Controllers
         }
 
         [HttpGet]
-        [ServiceFilter(typeof(ValidateGamerForAchievementExistsAttribute))]
+        [ServiceFilter(typeof(ValidateGameExistsAttribute))]
         public async Task<IActionResult> GetAchievementsForGame(Guid gameId)
         {
-            var achievementFromDb = await _repository.Achievement.GetAchievementsAsync(gameId, trackChanges: false);
+            var game = HttpContext.Items["game"] as Game;
+            
+            var achievements = game.Achievements.ToList();
 
-            var achievementsDto = _mapper.Map<IEnumerable<AchievementDto>>(achievementFromDb);
+            var achievementsDto = _mapper.Map<IEnumerable<AchievementDto>>(achievements);
 
             return Ok(achievementsDto);
         }
 
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        [ServiceFilter(typeof(ValidateGamerForAchievementExistsAttribute))]
+        [ServiceFilter(typeof(ValidateGameExistsAttribute))]
         public async Task<IActionResult> CreateAchievementForGame(Guid gameId, [FromBody] AchievementForCreationDto achievement)
         {
             var achievementEntity = _mapper.Map<Achievement>(achievement);
@@ -67,8 +68,7 @@ namespace SteamAchievements.Controllers
 
 
         [HttpDelete("{id}")]
-        [ServiceFilter(typeof(ValidateGamerForAchievementExistsAttribute))]
-        [ServiceFilter(typeof(ValidateAchievementExistsAttribute))]
+        [ServiceFilter(typeof(ValidateAchievementForGameExistsAttribute))]
         public async Task<IActionResult> DeleteAchievementForGame(Guid gameId, Guid id)
         {
             var achievementForGame = HttpContext.Items["achievement"] as Achievement;

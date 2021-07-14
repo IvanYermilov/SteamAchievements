@@ -29,6 +29,7 @@ namespace Repository
         {
             return await FindByCondition(g => g.Id == gameId, trackChanges)
                 .Include(g => g.Developers)
+                .Include(g => g.Achievements)
                 .SingleOrDefaultAsync();
         }
 
