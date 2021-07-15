@@ -36,6 +36,8 @@ namespace Repository
         public async Task<Game> GetGameAsync(Guid developerId, Guid id, bool trackChanges) =>
             await FindByCondition(g => g.Developers.FirstOrDefault(d => d.Id == developerId) != null 
                                        && g.Id.Equals(id), trackChanges)
+                .Include(g => g.Developers)
+                .Include(g => g.Achievements)
                 .SingleOrDefaultAsync();
         public void DeleteGame(Game game) => Delete(game);
     }

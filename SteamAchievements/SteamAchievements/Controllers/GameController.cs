@@ -2,15 +2,12 @@
 using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using SteamAchievements.ActionFilters;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.JsonPatch;
 
 namespace SteamAchievements.Controllers
 {
@@ -125,35 +122,11 @@ namespace SteamAchievements.Controllers
         }
 
         [HttpDelete("delete-from-developer-game-with/{gameId}")]
-        [ServiceFilter(typeof(ValidateGameExistsAttribute))]
+        [ServiceFilter(typeof(ValidateGameForDeveloperExistsAttribute))]
         public async Task<IActionResult> DetachGameForDeveloper(Guid developerId, Guid gameId)
         {
-
-            var gameEntity = HttpContext.Items["game"] as Game;
-            Game game;
-            Developer developer = default;
-            HttpClient client = new HttpClient();
-
-            try
-            {
-                HttpResponseMessage response = await client.GetAsync($"https://localhost:5001/api/developers/{developerId}");
-                response.EnsureSuccessStatusCode();
-                string responseBody = await response.Content.ReadAsStringAsync();
-                var developerDto = JsonConvert.DeserializeObject<DeveloperDto>(responseBody);
-                if (developerDto == null)
-                {
-                    _logger.LogInfo($"Developer with id: {gameId} doesn't exist.");
-                    return NotFound();
-                }
-            }
-            catch (HttpRequestException e)
-            {
-                Console.WriteLine("\nException Caught!");
-                Console.WriteLine("Message :{0} ", e.Message);
-            }
-
-            game = await _repository.Game.GetGameAsync(developerId, gameId, true);
-            developer = await _repository.Developer.GetDeveloperAsync(developerId, true);
+            var game = HttpContext.Items["game"] as Game;
+            var developer = await _repository.Developer.GetDeveloperAsync(developerId, true);
             game.Developers.Remove(developer);
             await _repository.SaveAsync();
             return Ok();
@@ -163,30 +136,8 @@ namespace SteamAchievements.Controllers
         [ServiceFilter(typeof(ValidateGameForDeveloperExistsAttribute))]
         public async Task<IActionResult> DeleteGameForDeveloper(Guid developerId, Guid gameId)
         {
-            HttpClient client = new HttpClient();
-            var gameForDeveloper = HttpContext.Items["game"] as Game;
-            IEnumerable<Achievement> achievements = default;
-            try
-            {
-                HttpResponseMessage response = await client.GetAsync($"https://localhost:5001/api/games/{gameId}/achievements");
-                response.EnsureSuccessStatusCode();
-                string responseBody = await response.Content.ReadAsStringAsync();
-                var achievementsDto = JsonConvert.DeserializeObject<IEnumerable<AchievementDto>>(responseBody);
-                achievements = _mapper.Map<IEnumerable<Achievement>>(achievementsDto);
-            }
-            catch (HttpRequestException e)
-            {
-                Console.WriteLine("\nException Caught!");
-                Console.WriteLine("Message :{0} ", e.Message);
-            }
-
-            foreach (var achievement in achievements)
-            {   
-
-                 _repository.Achievement.DeleteAchievement(achievement);
-            }
-            
-            _repository.Game.DeleteGame(gameForDeveloper);
+            var game = HttpContext.Items["game"] as Game;
+            _repository.Game.DeleteGame(game);
             await _repository.SaveAsync();
             return NoContent();
         }
