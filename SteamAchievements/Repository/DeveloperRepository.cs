@@ -34,5 +34,12 @@ namespace Repository
 
         public void DeleteDeveloper(Developer developer) => Delete(developer);
 
+        public bool IsDeveloperExist(Guid developerId)
+        {
+            var result = RepositoryContext.Developer.Any(d => d.Id == developerId);
+            return result;
+        }
+            
+
     }
 }

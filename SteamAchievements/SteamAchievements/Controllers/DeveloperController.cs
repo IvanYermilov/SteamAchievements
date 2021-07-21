@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.JsonPatch;
 using Newtonsoft.Json;
+using SteamAchievements.Services;
 
 namespace SteamAchievements.Controllers
 {
@@ -21,22 +22,23 @@ namespace SteamAchievements.Controllers
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
+        private readonly CurrentSessionStateService _currentSessionService;
 
-
-        public DeveloperController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
+        public DeveloperController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, CurrentSessionStateService currentSessionService)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
+            _currentSessionService = currentSessionService;
         }
 
-        [HttpGet("{id}", Name = "DeveloperById")]
-        public async Task<IActionResult> GetDeveloper(Guid id)
+        [HttpGet("{developerId}", Name = "DeveloperById")]
+        public async Task<IActionResult> GetDeveloper(Guid developerId)
         {
-            var developer = await _repository.Developer.GetDeveloperAsync(id, trackChanges: false);
+            var developer = await _repository.Developer.GetDeveloperAsync(developerId, trackChanges: false);
             if (developer == null)
             {
-                _logger.LogInfo($"Developer with id: {id} doesn't exist in the database.");
+                _logger.LogInfo($"Developer with id: {developerId} doesn't exist in the database.");
 
                 return NotFound();
             }
@@ -86,11 +88,11 @@ namespace SteamAchievements.Controllers
             return CreatedAtRoute("DeveloperById", new { id = developerToReturn.Id }, developerToReturn);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{developerId}")]
         [ServiceFilter(typeof(ValidateDeveloperExistsAttribute))]
-        public async Task<IActionResult> DeleteDeveloper(Guid id)
+        public async Task<IActionResult> DeleteDeveloper(Guid developerId)
         {
-            var developer = HttpContext.Items["developer"] as Developer;
+            var developer = _currentSessionService.CurrentDeveloper;
             foreach (var game in developer.Games)
             {
                 if (game.Developers.Count() == 1 && game.Developers.Any(d => d.Id.Equals(developer.Id))) _repository.Game.DeleteGame(game);
