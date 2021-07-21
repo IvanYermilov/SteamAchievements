@@ -14,5 +14,6 @@ namespace Contracts
         Task<IEnumerable<Developer>> GetDevelopersForGameAsync(Guid gameId, bool trackChanges);
         void CreateDeveloper(Developer developer);
         void DeleteDeveloper(Developer developer);
+        bool IsDeveloperExist(Guid developerId);
     }
 }

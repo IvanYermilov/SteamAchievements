@@ -5,6 +5,7 @@ using Entities.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SteamAchievements.ActionFilters;
+using SteamAchievements.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,18 +19,26 @@ namespace SteamAchievements.Controllers
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
+        private readonly CurrentSessionStateService _currentSessionService;
 
-        public GameController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
+        public GameController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, CurrentSessionStateService currentSessionService)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
+            _currentSessionService = currentSessionService;
         }
 
         [HttpGet("{gameId}", Name = "GetGameForDeveloper")]
-        [ServiceFilter(typeof(ValidateDeveloperForGameExistsAttribute))]
         public async Task<IActionResult> GetGameForDeveloper(Guid developerId, Guid gameId)
         {
+            var isDeveloperExist = _repository.Developer.IsDeveloperExist(developerId);
+            if (isDeveloperExist == false)
+            {
+                _logger.LogInfo($"Developer with id: {developerId} doesn't exist in the database.");
+                return NotFound();
+            }
+
             var gameDb = await _repository.Game.GetGameAsync(developerId, gameId, trackChanges: false);
 
             if (gameDb == null)
@@ -46,15 +55,13 @@ namespace SteamAchievements.Controllers
         [HttpGet]
         public async Task<IActionResult> GetGamesForDeveloper(Guid developerId)
         {
-            var developer = await _repository.Developer.GetDeveloperAsync(developerId, trackChanges: false);
-            if (developer == null)
+            var isDeveloperExist = _repository.Developer.IsDeveloperExist(developerId);
+            if (isDeveloperExist == false)
             {
                 _logger.LogInfo($"Developer with id: {developerId} doesn't exist in the database.");
                 return NotFound();
             }
             var gamesFromDb = await _repository.Game.GetGamesAsync(developerId, trackChanges: false);
-
-            IEnumerable<Game> games = await _repository.Game.GetGamesForDeveloper(developerId);
 
             var gamesDto = _mapper.Map<IEnumerable<GameDto>>(gamesFromDb);
 
@@ -67,7 +74,7 @@ namespace SteamAchievements.Controllers
         public async Task<IActionResult> CreateGameForDeveloper(Guid developerId, [FromBody] GameForCreationDto game)
         {
             var gameEntity = _mapper.Map<Game>(game);
-            var developerForGame = HttpContext.Items["developer"] as Developer;
+            var developerForGame = _currentSessionService.CurrentDeveloper;
             developerForGame.Games.Add(gameEntity);
             await _repository.SaveAsync();
             var gameToReturn = _mapper.Map<GameDto>(gameEntity);

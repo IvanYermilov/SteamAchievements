@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using SteamAchievements.Services;
 using System;
 using System.Threading.Tasks;
 
@@ -10,15 +11,17 @@ namespace SteamAchievements.ActionFilters
     {
         private readonly Contracts.IRepositoryManager _repository;
         private readonly Contracts.ILoggerManager _logger;
-        public ValidateDeveloperExistsAttribute(IRepositoryManager repository, ILoggerManager logger)
+        private readonly CurrentSessionStateService _currentSessionService;
+        public ValidateDeveloperExistsAttribute(IRepositoryManager repository, ILoggerManager logger, CurrentSessionStateService currentSessionService)
         {
             _repository = repository;
             _logger = logger;
+            _currentSessionService = currentSessionService;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var id = (Guid)context.ActionArguments["id"];
+            var id = (Guid)context.ActionArguments["developerId"];
             var developer = await _repository.Developer.GetDeveloperAsync(id, true);
 
             if (developer == null)
@@ -29,7 +32,7 @@ namespace SteamAchievements.ActionFilters
             }
             else
             {
-                context.HttpContext.Items.Add("developer", developer);
+                _currentSessionService.CurrentDeveloper = developer;
                 await next();
             }
         }

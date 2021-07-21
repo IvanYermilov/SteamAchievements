@@ -9,6 +9,7 @@ using SteamAchievements.ActionFilters;
 using SteamAchievements.Extensions;
 using System.IO;
 using Contracts;
+using SteamAchievements.Services;
 
 namespace SteamAchievements
 {
@@ -48,6 +49,7 @@ namespace SteamAchievements
             .AddXmlDataContractSerializerFormatters();
             //    .AddCustomCSVFormatter();
             //services.AddCustomMediaTypes();
+            services.AddScoped<CurrentSessionStateService>();
             services.AddScoped<ValidationFilterAttribute>();
             services.AddScoped<ValidateDeveloperExistsAttribute>();
             services.AddScoped<ValidateGameForDeveloperExistsAttribute>();
