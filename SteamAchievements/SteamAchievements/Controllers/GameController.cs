@@ -144,7 +144,7 @@ namespace SteamAchievements.Controllers
         public async Task<IActionResult> DeleteGameForDeveloper(Guid developerId, Guid gameId)
         {
             var game = HttpContext.Items["game"] as Game;
-            _repository.Game.DeleteGame(game);
+            _repository.Game.Delete(game);
             await _repository.SaveAsync();
             return NoContent();
         }

@@ -80,7 +80,7 @@ namespace SteamAchievements.Controllers
         {
             var developerEntity = _mapper.Map<Developer>(developer);
 
-            _repository.Developer.CreateDeveloper(developerEntity);
+            _repository.Developer.Create(developerEntity);
             await _repository.SaveAsync();
 
             var developerToReturn = _mapper.Map<DeveloperDto>(developerEntity);
@@ -95,9 +95,9 @@ namespace SteamAchievements.Controllers
             var developer = _currentSessionService.CurrentDeveloper;
             foreach (var game in developer.Games)
             {
-                if (game.Developers.Count() == 1 && game.Developers.Any(d => d.Id.Equals(developer.Id))) _repository.Game.DeleteGame(game);
+                if (game.Developers.Count() == 1 && game.Developers.Any(d => d.Id.Equals(developer.Id))) _repository.Game.Delete(game);
             }
-            _repository.Developer.DeleteDeveloper(developer);
+            _repository.Developer.Delete(developer);
             await _repository.SaveAsync();
             return NoContent();
         }

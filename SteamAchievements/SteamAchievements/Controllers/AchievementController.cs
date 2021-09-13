@@ -72,7 +72,7 @@ namespace SteamAchievements.Controllers
         public async Task<IActionResult> DeleteAchievementForGame(Guid gameId, Guid id)
         {
             var achievementForGame = HttpContext.Items["achievement"] as Achievement;
-            _repository.Achievement.DeleteAchievement(achievementForGame);
+            _repository.Achievement.Delete(achievementForGame);
             await _repository.SaveAsync();
             return NoContent();
         }

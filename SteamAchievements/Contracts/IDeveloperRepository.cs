@@ -7,13 +7,11 @@ using Entities.Models;
 
 namespace Contracts
 {
-    public interface IDeveloperRepository
+    public interface IDeveloperRepository : IRepositoryBase<Developer>
     {
         Task<Developer> GetDeveloperAsync(Guid developerId, bool trackChanges);
         Task<IEnumerable<Developer>> GetAllDevelopersAsync(bool trackChanges);
         Task<IEnumerable<Developer>> GetDevelopersForGameAsync(Guid gameId, bool trackChanges);
-        void CreateDeveloper(Developer developer);
-        void DeleteDeveloper(Developer developer);
         bool IsDeveloperExist(Guid developerId);
     }
 }
