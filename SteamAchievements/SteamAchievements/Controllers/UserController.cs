@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Contracts;
-using Entities.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DataTransferObjects.Users;
 
 namespace SteamAchievements.Controllers
 {

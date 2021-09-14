@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
-using Entities.DataTransferObjects;
+using DataTransferObjects.Developers;
+using DataTransferObjects.Games;
+using DataTransferObjects.Achievements;
+using DataTransferObjects.Users;
 using Entities.Models;
 
 namespace SteamAchievements
@@ -13,27 +16,24 @@ namespace SteamAchievements
                     opt => opt
                         .MapFrom(x => string.Join(' ', x.Address, x.Country)));
 
-            CreateMap<DeveloperForCreationDto, Developer>();
+            CreateMap<DeveloperForManipulationDto, Developer>();
 
             CreateMap<Game, GameDto>();
 
-            CreateMap<GameForCreationDto, Game>();
+            CreateMap<GameForManipulationDto, Game>();
 
             CreateMap<Achievement, AchievementDto>();
 
             CreateMap<Achievement, AchievementDto>().ReverseMap();
 
-            CreateMap<AchievementForCreationDto, Achievement>();
+            CreateMap<AchievementForManipulationDto, Achievement>();
 
-            CreateMap<DeveloperForUpdateDto, Developer>();
+            CreateMap<DeveloperForManipulationDto, Developer>().ReverseMap();
 
-            CreateMap<DeveloperForUpdateDto, Developer>().ReverseMap();
+            CreateMap<GameForManipulationDto, Game>().ReverseMap();
 
-            CreateMap<GameForUpdateDto, Game>();
+            CreateMap<UserForManipulationDto, User>();
 
-            CreateMap<GameForUpdateDto, Game>().ReverseMap();
-
-            CreateMap<UserForRegistrationDto, User>();
             CreateMap<User, UserDto>();
         }
 

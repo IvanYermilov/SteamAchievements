@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Entities.DataTransferObjects
+namespace DataTransferObjects.Users
 {
-    public class UserForRegistrationDto
+    public class UserForManipulationDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

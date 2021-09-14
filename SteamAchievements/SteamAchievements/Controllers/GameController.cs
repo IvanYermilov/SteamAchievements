@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Contracts;
-using Entities.DataTransferObjects;
+using DataTransferObjects.Games;
 using Entities.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -71,7 +71,7 @@ namespace SteamAchievements.Controllers
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateDeveloperForGameExistsAttribute))]
-        public async Task<IActionResult> CreateGameForDeveloper(Guid developerId, [FromBody] GameForCreationDto game)
+        public async Task<IActionResult> CreateGameForDeveloper(Guid developerId, [FromBody] GameForManipulationDto game)
         {
             var gameEntity = _mapper.Map<Game>(game);
             var developerForGame = _currentSessionService.CurrentDeveloper;
@@ -99,7 +99,7 @@ namespace SteamAchievements.Controllers
 
         [HttpPatch("{gameId}")]
         [ServiceFilter(typeof(ValidateGameForDeveloperExistsAttribute))]
-        public async Task<IActionResult> PartiallyUpdateEmployeeForCompany(Guid developerId, Guid gameId, [FromBody] JsonPatchDocument<GameForUpdateDto> patchDoc)
+        public async Task<IActionResult> PartiallyUpdateEmployeeForCompany(Guid developerId, Guid gameId, [FromBody] JsonPatchDocument<GameForManipulationDto> patchDoc)
         {
             if (patchDoc == null)
             {
@@ -109,7 +109,7 @@ namespace SteamAchievements.Controllers
 
             var gameEntity = HttpContext.Items["game"] as Game;
 
-            var gameToPatch = _mapper.Map<GameForUpdateDto>(gameEntity);
+            var gameToPatch = _mapper.Map<GameForManipulationDto>(gameEntity);
 
             patchDoc.ApplyTo(gameToPatch, ModelState);
 

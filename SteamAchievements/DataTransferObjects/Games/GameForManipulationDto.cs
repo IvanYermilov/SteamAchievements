@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DataTransferObjects.Developers;
 
-namespace Entities.DataTransferObjects
+namespace DataTransferObjects.Games
 {
     public class GameForManipulationDto
     {
@@ -14,6 +11,6 @@ namespace Entities.DataTransferObjects
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public IEnumerable<DeveloperForCreationDto> Developers { get; set; }
+        public IEnumerable<DeveloperForManipulationDto> Developers { get; set; }
     }
 }

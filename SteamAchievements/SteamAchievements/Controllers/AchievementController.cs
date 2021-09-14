@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Contracts;
-using Entities.DataTransferObjects;
+using DataTransferObjects.Achievements;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using SteamAchievements.ActionFilters;
@@ -28,7 +28,7 @@ namespace SteamAchievements.Controllers
 
         [HttpGet("{id}", Name = "GetAchievementForGame")]
         [ServiceFilter(typeof(ValidateAchievementForGameExistsAttribute))]
-        public async Task<IActionResult> GetAchievementForGame(Guid gameId, Guid id)
+        public IActionResult GetAchievementForGame(Guid gameId, Guid id)
         {
             var achievementForGame = HttpContext.Items["achievement"] as Achievement;
 
@@ -39,7 +39,7 @@ namespace SteamAchievements.Controllers
 
         [HttpGet]
         [ServiceFilter(typeof(ValidateGameExistsAttribute))]
-        public async Task<IActionResult> GetAchievementsForGame(Guid gameId)
+        public IActionResult GetAchievementsForGame(Guid gameId)
         {
             var game = HttpContext.Items["game"] as Game;
             
@@ -53,7 +53,7 @@ namespace SteamAchievements.Controllers
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateGameExistsAttribute))]
-        public async Task<IActionResult> CreateAchievementForGame(Guid gameId, [FromBody] AchievementForCreationDto achievement)
+        public async Task<IActionResult> CreateAchievementForGame(Guid gameId, [FromBody] AchievementForManipulationDto achievement)
         {
             var achievementEntity = _mapper.Map<Achievement>(achievement);
             _repository.Achievement.CreateAchievementForGame(gameId, achievementEntity);

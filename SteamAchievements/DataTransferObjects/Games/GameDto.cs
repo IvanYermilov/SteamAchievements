@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.DataTransferObjects
+namespace DataTransferObjects.Games
 {
-    public class DeveloperDto
+    public class GameDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public string FullAddress { get; set; }
+        public string Description { get; set; }
     }
 }

@@ -38,6 +38,5 @@ namespace Contracts
                 .Include(g => g.Developers)
                 .Include(g => g.Achievements)
                 .SingleOrDefaultAsync();
-        public void DeleteGame(Game game) => Delete(game);
     }
 }

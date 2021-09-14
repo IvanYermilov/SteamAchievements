@@ -1,17 +1,14 @@
 ﻿using AutoMapper;
 using Contracts;
-using Entities.DataTransferObjects;
+using DataTransferObjects.Developers;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using SteamAchievements.ActionFilters;
+using SteamAchievements.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.JsonPatch;
-using Newtonsoft.Json;
-using SteamAchievements.Services;
 
 namespace SteamAchievements.Controllers
 {
@@ -76,7 +73,7 @@ namespace SteamAchievements.Controllers
 
         [HttpPost(Name = "CreateDeveloper")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> CreateDeveloper([FromBody] DeveloperForCreationDto developer)
+        public async Task<IActionResult> CreateDeveloper([FromBody] DeveloperForManipulationDto developer)
         {
             var developerEntity = _mapper.Map<Developer>(developer);
 

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DataTransferObjects.Games;
 
-namespace Entities.DataTransferObjects
+namespace DataTransferObjects.Developers
 {
     public class DeveloperForManipulationDto
     {
@@ -17,6 +14,6 @@ namespace Entities.DataTransferObjects
         [MaxLength(60, ErrorMessage = "Maximum length for rhe Address is 60 characters.")]
         public string Address { get; set; }
         public string Country { get; set; }
-        public IEnumerable<GameForCreationDto> Games { get; set; }
+        public IEnumerable<GameForManipulationDto> Games { get; set; }
     }
 }

@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Entities.DataTransferObjects
+namespace DataTransferObjects.Achievements
 {
-    public class AchievementForCreationDto
+    public class AchievementForManipulationDto
     {
         [Column("AchievementId")]
         public Guid Id { get; set; }

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Entities.DataTransferObjects
+namespace DataTransferObjects.Achievements
 {
     public class AchievementDto
     {
