@@ -5,27 +5,24 @@ using SteamAchievements.Services;
 using System;
 using System.Threading.Tasks;
 
-namespace SteamAchievements.ActionFilters
+namespace SteamAchievements.InfoStructure.ActionFilters
 {
-    public class ValidateDeveloperForGameExistsAttribute : IAsyncActionFilter
+    public class ValidateDeveloperExistsAttribute : IAsyncActionFilter
     {
-        private readonly ILoggerManager _logger;
-        private readonly IRepositoryManager _repository;
+        private readonly Contracts.IRepositoryManager _repository;
+        private readonly Contracts.ILoggerManager _logger;
         private readonly CurrentSessionStateService _currentSessionService;
-
-        public ValidateDeveloperForGameExistsAttribute(ILoggerManager logger, IRepositoryManager repository, CurrentSessionStateService currentSessionService)
+        public ValidateDeveloperExistsAttribute(IRepositoryManager repository, ILoggerManager logger, CurrentSessionStateService currentSessionService)
         {
-            _logger = logger;
             _repository = repository;
+            _logger = logger;
             _currentSessionService = currentSessionService;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var method = context.HttpContext.Request.Method;
-            var trackChanges = (method.Equals("PUT") || method.Equals("POST")) ? true : false;
             var id = (Guid)context.ActionArguments["developerId"];
-            var developer = await _repository.Developer.GetDeveloperAsync(id, trackChanges);
+            var developer = await _repository.Developer.GetDeveloperAsync(id, true);
 
             if (developer == null)
             {

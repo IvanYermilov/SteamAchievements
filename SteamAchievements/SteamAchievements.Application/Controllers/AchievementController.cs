@@ -7,9 +7,9 @@ using Contracts;
 using DataTransferObjects.Achievements;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
-using SteamAchievements.ActionFilters;
+using SteamAchievements.InfoStructure.ActionFilters;
 
-namespace SteamAchievements.Controllers
+namespace SteamAchievements.Application.Controllers
 {
     [Route("api/games/{gameId}/achievements")]
     [ApiController]

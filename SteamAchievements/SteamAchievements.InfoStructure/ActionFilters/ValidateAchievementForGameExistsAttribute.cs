@@ -6,7 +6,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SteamAchievements.ActionFilters
+namespace SteamAchievements.InfoStructure.ActionFilters
 {
     public class ValidateAchievementForGameExistsAttribute : IAsyncActionFilter
     {

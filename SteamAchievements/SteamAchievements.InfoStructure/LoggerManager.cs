@@ -1,7 +1,7 @@
 ﻿using Contracts;
 using NLog;
 
-namespace LoggerService
+namespace SteamAchievements.InfoStructure
 {
     public class LoggerManager : ILoggerManager
     {

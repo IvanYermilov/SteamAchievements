@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog;
-using SteamAchievements.ActionFilters;
+using SteamAchievements.InfoStructure.ActionFilters;
 using SteamAchievements.Extensions;
 using System.IO;
 using Contracts;

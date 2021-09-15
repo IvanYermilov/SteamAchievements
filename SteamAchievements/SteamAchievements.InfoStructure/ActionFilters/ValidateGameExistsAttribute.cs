@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Threading.Tasks;
 
-namespace SteamAchievements.ActionFilters
+namespace SteamAchievements.InfoStructure.ActionFilters
 {
     public class ValidateGameExistsAttribute : IAsyncActionFilter
     {

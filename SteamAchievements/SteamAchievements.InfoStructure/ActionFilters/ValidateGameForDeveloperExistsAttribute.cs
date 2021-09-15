@@ -4,7 +4,7 @@ using Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace SteamAchievements.ActionFilters
+namespace SteamAchievements.InfoStructure.ActionFilters
 {
     public class ValidateGameForDeveloperExistsAttribute : IAsyncActionFilter
     {

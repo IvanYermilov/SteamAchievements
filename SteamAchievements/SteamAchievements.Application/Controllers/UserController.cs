@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DataTransferObjects.Users;
 
-namespace SteamAchievements.Controllers
+namespace SteamAchievements.Application.Controllers
 {
     [Route("api/users")]
     [ApiController]

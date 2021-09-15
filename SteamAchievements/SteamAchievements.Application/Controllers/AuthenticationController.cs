@@ -4,10 +4,10 @@ using DataTransferObjects.Users;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SteamAchievements.ActionFilters;
+using SteamAchievements.InfoStructure.ActionFilters;
 using System.Threading.Tasks;
 
-namespace SteamAchievements.Controllers
+namespace SteamAchievements.Application.Controllers
 {
     [Route("api/authentication")]
     [ApiController]

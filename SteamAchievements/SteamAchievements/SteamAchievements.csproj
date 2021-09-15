@@ -29,8 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataTransferObjects\DataTransferObjects.csproj" />
-    <ProjectReference Include="..\LoggerService\LoggerService.csproj" />
+    <ProjectReference Include="..\SteamAchievements.InfoStructure\SteamAchievements.InfoStructure.csproj" />
   </ItemGroup>
 
 </Project>
