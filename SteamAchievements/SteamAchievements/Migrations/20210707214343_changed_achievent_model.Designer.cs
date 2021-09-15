@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SteamAchievements.InfoStructure.Entities;
+using SteamAchievements.Infrastructure.Entities;
 
 namespace SteamAchievements.Migrations
 {

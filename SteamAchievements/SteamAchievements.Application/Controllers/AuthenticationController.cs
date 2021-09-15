@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
-using SteamAchievements.InfoStructure.Contracts;
-using DataTransferObjects.Users;
-using SteamAchievements.InfoStructure.Entities.Models;
+using SteamAchievements.Infrastructure.Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SteamAchievements.InfoStructure.ActionFilters;
+using SteamAchievements.Infrastructure.ActionFilters;
 using System.Threading.Tasks;
+using SteamAchievements.Application.DataTransferObjects.Users;
 
 namespace SteamAchievements.Application.Controllers
 {
@@ -13,12 +12,10 @@ namespace SteamAchievements.Application.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
-        public AuthenticationController(ILoggerManager logger, IMapper mapper, UserManager<User> userManager)
+        public AuthenticationController(IMapper mapper, UserManager<User> userManager)
         {
-            _logger = logger;
             _mapper = mapper;
             _userManager = userManager;
         }

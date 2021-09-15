@@ -5,11 +5,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog;
-using SteamAchievements.InfoStructure.ActionFilters;
+using SteamAchievements.Infrastructure.ActionFilters;
 using SteamAchievements.Extensions;
 using System.IO;
-using SteamAchievements.InfoStructure.Contracts;
-using SteamAchievements.InfoStructure.Services;
+using System.Reflection;
+using SteamAchievements.Infrastructure.Contracts;
+using SteamAchievements.Infrastructure.Services;
 
 namespace SteamAchievements
 {
@@ -26,6 +27,7 @@ namespace SteamAchievements
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var assembly = Assembly.Load("SteamAchievements.Application");
             services.ConfigureCors();
             services.ConfigureIISIntegration();
             services.ConfigureLoggerService();
@@ -35,7 +37,7 @@ namespace SteamAchievements
             //    options.SuppressModelStateInvalidFilter = true;
             //});
             services.ConfigureSqlContext(Configuration);
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(assembly);
             services.AddControllers();
             services.AddControllers(config =>
             {

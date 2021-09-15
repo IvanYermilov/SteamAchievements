@@ -8,7 +8,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamAchievements", "SteamA
 		{3653B397-F187-4D8E-881A-BEDBF03D70A5} = {3653B397-F187-4D8E-881A-BEDBF03D70A5}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamAchievements.InfoStructure", "SteamAchievements.InfoStructure\SteamAchievements.InfoStructure.csproj", "{3653B397-F187-4D8E-881A-BEDBF03D70A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamAchievements.Infrastructure", "SteamAchievements.Infrastructure\SteamAchievements.Infrastructure.csproj", "{3653B397-F187-4D8E-881A-BEDBF03D70A5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamAchievements.Application", "SteamAchievements.Application\SteamAchievements.Application.csproj", "{E4D12E05-3845-4B2A-8285-A744F2CC7D71}"
 EndProject

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataTransferObjects.Developers
+namespace SteamAchievements.Application.DataTransferObjects.Developers
 {
     public class DeveloperDto
     {

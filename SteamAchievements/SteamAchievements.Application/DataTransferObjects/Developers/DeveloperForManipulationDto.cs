@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using DataTransferObjects.Games;
+using SteamAchievements.Application.DataTransferObjects.Games;
 
-namespace DataTransferObjects.Developers
+namespace SteamAchievements.Application.DataTransferObjects.Developers
 {
     public class DeveloperForManipulationDto
     {

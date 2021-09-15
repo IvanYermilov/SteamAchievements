@@ -1,4 +1,4 @@
-﻿namespace DataTransferObjects.Users
+﻿namespace SteamAchievements.Application.DataTransferObjects.Users
 {
     public class UserDto
     {

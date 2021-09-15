@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace DataTransferObjects.Users
+namespace SteamAchievements.Application.DataTransferObjects.Users
 {
     public class UserForManipulationDto
     {

@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
-using SteamAchievements.InfoStructure.Contracts;
-using DataTransferObjects.Games;
-using SteamAchievements.InfoStructure.Entities.Models;
+using SteamAchievements.Infrastructure.Contracts;
+using SteamAchievements.Infrastructure.Entities.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using SteamAchievements.InfoStructure.ActionFilters;
-using SteamAchievements.InfoStructure.Services;
+using SteamAchievements.Infrastructure.ActionFilters;
+using SteamAchievements.Infrastructure.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SteamAchievements.Application.DataTransferObjects.Games;
 
 namespace SteamAchievements.Application.Controllers
 {

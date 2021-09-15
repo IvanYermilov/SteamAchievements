@@ -1,8 +1,8 @@
 ﻿using AspNetCoreRateLimit;
-using SteamAchievements.InfoStructure.Contracts;
-using SteamAchievements.InfoStructure.Entities;
-using SteamAchievements.InfoStructure.Entities.Models;
-using SteamAchievements.InfoStructure;
+using SteamAchievements.Infrastructure.Contracts;
+using SteamAchievements.Infrastructure.Entities;
+using SteamAchievements.Infrastructure.Entities.Models;
+using SteamAchievements.Infrastructure;
 using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;

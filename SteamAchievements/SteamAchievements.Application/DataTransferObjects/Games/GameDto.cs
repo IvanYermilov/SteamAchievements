@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataTransferObjects.Games
+namespace SteamAchievements.Application.DataTransferObjects.Games
 {
     public class GameDto
     {

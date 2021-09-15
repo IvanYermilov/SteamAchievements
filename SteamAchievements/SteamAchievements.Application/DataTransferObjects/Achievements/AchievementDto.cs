@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataTransferObjects.Achievements
+namespace SteamAchievements.Application.DataTransferObjects.Achievements
 {
     public class AchievementDto
     {

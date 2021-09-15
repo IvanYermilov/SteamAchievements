@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using DataTransferObjects.Developers;
-using DataTransferObjects.Games;
-using DataTransferObjects.Achievements;
-using DataTransferObjects.Users;
-using SteamAchievements.InfoStructure.Entities.Models;
+using SteamAchievements.Application.DataTransferObjects.Achievements;
+using SteamAchievements.Application.DataTransferObjects.Developers;
+using SteamAchievements.Application.DataTransferObjects.Games;
+using SteamAchievements.Application.DataTransferObjects.Users;
+using SteamAchievements.Infrastructure.Entities.Models;
 
-namespace SteamAchievements
+namespace SteamAchievements.Application
 {
     public class MappingProfile : Profile
     {
@@ -29,6 +29,8 @@ namespace SteamAchievements
             CreateMap<AchievementForManipulationDto, Achievement>();
 
             CreateMap<DeveloperForManipulationDto, Developer>().ReverseMap();
+            
+            CreateMap<Developer, DeveloperDto>();
 
             CreateMap<GameForManipulationDto, Game>().ReverseMap();
 

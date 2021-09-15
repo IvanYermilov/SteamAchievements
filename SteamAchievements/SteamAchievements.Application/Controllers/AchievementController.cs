@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using SteamAchievements.InfoStructure.Contracts;
-using DataTransferObjects.Achievements;
-using SteamAchievements.InfoStructure.Entities.Models;
+using SteamAchievements.Infrastructure.Contracts;
+using SteamAchievements.Application.DataTransferObjects.Achievements;
+using SteamAchievements.Infrastructure.Entities.Models;
 using Microsoft.AspNetCore.Mvc;
-using SteamAchievements.InfoStructure.ActionFilters;
+using SteamAchievements.Infrastructure.ActionFilters;
 
 namespace SteamAchievements.Application.Controllers
 {
@@ -16,13 +16,11 @@ namespace SteamAchievements.Application.Controllers
     public class AchievementController : ControllerBase
     {
         private readonly IRepositoryManager _repository;
-        private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
 
-        public AchievementController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
+        public AchievementController(IRepositoryManager repository, IMapper mapper)
         {
             _repository = repository;
-            _logger = logger;
             _mapper = mapper;
         }
 
