@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Contracts;
+using SteamAchievements.InfoStructure.Contracts;
 using DataTransferObjects.Users;
-using Entities.Models;
+using SteamAchievements.InfoStructure.Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SteamAchievements.InfoStructure.ActionFilters;

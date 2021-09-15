@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 
-namespace Entities.Models
+namespace SteamAchievements.InfoStructure.Entities.Models
 {
     public class User : IdentityUser
     {

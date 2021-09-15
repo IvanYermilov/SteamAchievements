@@ -3,7 +3,7 @@ using DataTransferObjects.Developers;
 using DataTransferObjects.Games;
 using DataTransferObjects.Achievements;
 using DataTransferObjects.Users;
-using Entities.Models;
+using SteamAchievements.InfoStructure.Entities.Models;
 
 namespace SteamAchievements
 {

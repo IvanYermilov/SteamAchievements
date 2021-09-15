@@ -1,9 +1,9 @@
-﻿using Entities.Models;
+﻿using SteamAchievements.InfoStructure.Entities.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Contracts
+namespace SteamAchievements.InfoStructure.Contracts
 {
     public interface IAchievementRepository : IRepositoryBase<Achievement>
     {

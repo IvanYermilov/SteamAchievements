@@ -8,8 +8,8 @@ using NLog;
 using SteamAchievements.InfoStructure.ActionFilters;
 using SteamAchievements.Extensions;
 using System.IO;
-using Contracts;
-using SteamAchievements.Services;
+using SteamAchievements.InfoStructure.Contracts;
+using SteamAchievements.InfoStructure.Services;
 
 namespace SteamAchievements
 {

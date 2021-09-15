@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Contracts;
+using SteamAchievements.InfoStructure.Contracts;
 using DataTransferObjects.Achievements;
-using Entities.Models;
+using SteamAchievements.InfoStructure.Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using SteamAchievements.InfoStructure.ActionFilters;
 

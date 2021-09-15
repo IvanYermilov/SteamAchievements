@@ -1,7 +1,7 @@
-﻿using Entities;
+﻿using SteamAchievements.InfoStructure.Entities;
 using System.Threading.Tasks;
 
-namespace Contracts
+namespace SteamAchievements.InfoStructure.Contracts
 {
     public class RepositoryManager : IRepositoryManager
     {

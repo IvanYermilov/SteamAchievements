@@ -1,11 +1,11 @@
-﻿using Entities;
-using Entities.Models;
+﻿using SteamAchievements.InfoStructure.Entities;
+using SteamAchievements.InfoStructure.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Contracts
+namespace SteamAchievements.InfoStructure.Contracts
 {
     public class UserRepository : RepositoryBase<User>, IUserRepository
     {

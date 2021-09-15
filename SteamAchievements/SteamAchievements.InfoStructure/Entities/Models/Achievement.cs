@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Models
+namespace SteamAchievements.InfoStructure.Entities.Models
 {
     public class Achievement
     {

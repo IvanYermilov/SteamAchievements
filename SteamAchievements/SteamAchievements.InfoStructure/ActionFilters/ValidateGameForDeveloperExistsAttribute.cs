@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Contracts;
+using SteamAchievements.InfoStructure.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 

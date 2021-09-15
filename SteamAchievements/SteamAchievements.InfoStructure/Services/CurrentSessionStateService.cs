@@ -1,7 +1,7 @@
-﻿using Entities.Models;
+﻿using SteamAchievements.InfoStructure.Entities.Models;
 
 
-namespace SteamAchievements.Services
+namespace SteamAchievements.InfoStructure.Services
 {
     public class CurrentSessionStateService
     {

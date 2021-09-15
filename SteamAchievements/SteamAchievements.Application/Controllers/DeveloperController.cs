@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Contracts;
+using SteamAchievements.InfoStructure.Contracts;
 using DataTransferObjects.Developers;
-using Entities.Models;
+using SteamAchievements.InfoStructure.Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using SteamAchievements.InfoStructure.ActionFilters;
-using SteamAchievements.Services;
+using SteamAchievements.InfoStructure.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

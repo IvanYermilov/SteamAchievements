@@ -1,9 +1,9 @@
 ﻿using Entities.Configuration;
-using Entities.Models;
+using SteamAchievements.InfoStructure.Entities.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Entities
+namespace SteamAchievements.InfoStructure.Entities
 {
     public class RepositoryContext : IdentityDbContext<User>
     {

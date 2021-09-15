@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entities.Models;
+using SteamAchievements.InfoStructure.Entities.Models;
 
-namespace Contracts
+namespace SteamAchievements.InfoStructure.Contracts
 {
     public interface IDeveloperRepository : IRepositoryBase<Developer>
     {

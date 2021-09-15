@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Contracts
+namespace SteamAchievements.InfoStructure.Contracts
 {
     public interface IRepositoryManager
     {

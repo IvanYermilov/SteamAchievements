@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Contracts
+namespace SteamAchievements.InfoStructure.Contracts
 {
     public interface IRepositoryBase<T>
     {

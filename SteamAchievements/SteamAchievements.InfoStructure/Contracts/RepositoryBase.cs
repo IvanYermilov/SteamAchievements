@@ -1,10 +1,10 @@
-﻿using Entities;
+﻿using SteamAchievements.InfoStructure.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Contracts
+namespace SteamAchievements.InfoStructure.Contracts
 {
     public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {

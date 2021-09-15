@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Contracts;
+using SteamAchievements.InfoStructure.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -1,12 +1,12 @@
-﻿using Entities;
-using Entities.Models;
+﻿using SteamAchievements.InfoStructure.Entities.Models;
+using SteamAchievements.InfoStructure.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Contracts
+namespace SteamAchievements.InfoStructure.Contracts
 {
     public class AchievementRepository : RepositoryBase<Achievement>, IAchievementRepository
     {

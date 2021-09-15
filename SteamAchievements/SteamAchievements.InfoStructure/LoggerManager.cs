@@ -1,4 +1,4 @@
-﻿using Contracts;
+﻿using SteamAchievements.InfoStructure.Contracts;
 using NLog;
 
 namespace SteamAchievements.InfoStructure
