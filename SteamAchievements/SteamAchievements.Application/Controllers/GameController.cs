@@ -1,14 +1,10 @@
-﻿using AutoMapper;
-using SteamAchievements.Infrastructure.Contracts;
-using SteamAchievements.Infrastructure.Entities.Models;
-using Microsoft.AspNetCore.JsonPatch;
+﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using SteamAchievements.Infrastructure.ActionFilters;
-using SteamAchievements.Infrastructure.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using SteamAchievements.Application.ActionFilters;
 using SteamAchievements.Application.DataTransferObjects.Games;
+using SteamAchievements.Application.Services.GameService;
+using System;
+using System.Threading.Tasks;
 
 namespace SteamAchievements.Application.Controllers
 {
@@ -16,56 +12,29 @@ namespace SteamAchievements.Application.Controllers
     [ApiController]
     public class GameController : ControllerBase
     {
-        private readonly IRepositoryManager _repository;
-        private readonly ILoggerManager _logger;
-        private readonly IMapper _mapper;
-        private readonly CurrentSessionStateService _currentSessionService;
+        private readonly IGameService _gameService;
 
-        public GameController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, CurrentSessionStateService currentSessionService)
+
+        public GameController(IGameService gameService)
         {
-            _repository = repository;
-            _logger = logger;
-            _mapper = mapper;
-            _currentSessionService = currentSessionService;
+            _gameService = gameService;
         }
 
         [HttpGet("{gameId}", Name = "GetGameForDeveloper")]
-        public async Task<IActionResult> GetGameForDeveloper(Guid developerId, Guid gameId)
+        [ServiceFilter(typeof(ValidateGameForDeveloperExistsAttribute))]
+        public IActionResult GetGameForDeveloper(Guid developerId, Guid gameId)
         {
-            var isDeveloperExist = _repository.Developer.IsDeveloperExist(developerId);
-            if (isDeveloperExist == false)
-            {
-                _logger.LogInfo($"Developer with id: {developerId} doesn't exist in the database.");
-                return NotFound();
-            }
-
-            var gameDb = await _repository.Game.GetGameAsync(developerId, gameId, trackChanges: false);
-
-            if (gameDb == null)
-            {
-                _logger.LogInfo($"Game with id: {gameId} doesn't exist in the database.");
-                return NotFound();
-            }
-
-            var game = _mapper.Map<GameDto>(gameDb);
+            var game = _gameService.GetGame();
 
             return Ok(game);
         }
 
         [HttpGet]
+        [ServiceFilter(typeof(ValidateDeveloperExistsAttribute))]
         public async Task<IActionResult> GetGamesForDeveloper(Guid developerId)
         {
-            var isDeveloperExist = _repository.Developer.IsDeveloperExist(developerId);
-            if (isDeveloperExist == false)
-            {
-                _logger.LogInfo($"Developer with id: {developerId} doesn't exist in the database.");
-                return NotFound();
-            }
-            var gamesFromDb = await _repository.Game.GetGamesAsync(developerId, trackChanges: false);
-
-            var gamesDto = _mapper.Map<IEnumerable<GameDto>>(gamesFromDb);
-
-            return Ok(gamesDto);
+            var games = await _gameService.GetGamesForDeveloper();
+            return Ok(games);
         }
 
         [HttpPost]
@@ -73,27 +42,20 @@ namespace SteamAchievements.Application.Controllers
         [ServiceFilter(typeof(ValidateDeveloperForGameExistsAttribute))]
         public async Task<IActionResult> CreateGameForDeveloper(Guid developerId, [FromBody] GameForManipulationDto game)
         {
-            var gameEntity = _mapper.Map<Game>(game);
-            var developerForGame = _currentSessionService.CurrentDeveloper;
-            developerForGame.Games.Add(gameEntity);
-            await _repository.SaveAsync();
-            var gameToReturn = _mapper.Map<GameDto>(gameEntity);
+            var gameToReturn = await _gameService.CreateGameForDeveloper(game);
             return CreatedAtRoute("GetGameForDeveloper", new
             {
                 developerId,
-                id = gameToReturn.Id
+                gameId = gameToReturn.Id
             }, gameToReturn);
         }
 
         [HttpPost("add-to-developer-game-with/{gameId}")]
         [ServiceFilter(typeof(ValidateGameExistsAttribute))]
-        public async Task<IActionResult> AddGameForDeveloper(Guid developerId, Guid gameId)
+        [ServiceFilter(typeof(ValidateDeveloperExistsAttribute))]
+        public IActionResult AddGameForDeveloper(Guid developerId, Guid gameId)
         {
-
-            var gameEntity = HttpContext.Items["game"] as Game;
-            Developer developer = await _repository.Developer.GetDeveloperAsync(developerId, true);
-            gameEntity.Developers.Add(developer);
-            await _repository.SaveAsync();
+            _gameService.AddGameForDeveloper();
             return Ok();
         }
 
@@ -101,51 +63,27 @@ namespace SteamAchievements.Application.Controllers
         [ServiceFilter(typeof(ValidateGameForDeveloperExistsAttribute))]
         public async Task<IActionResult> PartiallyUpdateEmployeeForCompany(Guid developerId, Guid gameId, [FromBody] JsonPatchDocument<GameForManipulationDto> patchDoc)
         {
-            if (patchDoc == null)
-            {
-                _logger.LogError("patchDoc object sent from client is null.");
-                return BadRequest("patchDoc object is null");
-            }
-
-            var gameEntity = HttpContext.Items["game"] as Game;
-
-            var gameToPatch = _mapper.Map<GameForManipulationDto>(gameEntity);
-
-            patchDoc.ApplyTo(gameToPatch, ModelState);
-
-            TryValidateModel(gameToPatch);
-
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the patch document");
-                return UnprocessableEntity(ModelState);
-            }
-
-            _mapper.Map(gameToPatch, gameEntity);
-
-            await _repository.SaveAsync();
-
+            var controller = this;
+            var isPatchDocNull = await Task.Run(() =>_gameService.CheckPatchDocIsNull(patchDoc));
+            if (isPatchDocNull) return BadRequest("patchDoc object is null");
+            var modelState = await _gameService.PartiallyUpdateGame(patchDoc, controller);
+            if (!modelState.IsValid) return UnprocessableEntity(modelState);
             return NoContent();
         }
 
         [HttpDelete("delete-from-developer-game-with/{gameId}")]
         [ServiceFilter(typeof(ValidateGameForDeveloperExistsAttribute))]
-        public async Task<IActionResult> DetachGameForDeveloper(Guid developerId, Guid gameId)
+        public IActionResult DetachGameForDeveloper(Guid developerId, Guid gameId)
         {
-            var game = HttpContext.Items["game"] as Game;
-            var developer = await _repository.Developer.GetDeveloperAsync(developerId, true);
-            game.Developers.Remove(developer);
-            await _repository.SaveAsync();
+            Task.Run(() => _gameService.DetachGameForDeveloper(developerId));
             return Ok();
         }
 
         [HttpDelete("{gameId}")]
         [ServiceFilter(typeof(ValidateGameForDeveloperExistsAttribute))]
-        public async Task<IActionResult> DeleteGameForDeveloper(Guid developerId, Guid gameId)
+        public IActionResult DeleteGameForDeveloper(Guid developerId, Guid gameId)
         {
-            var game = HttpContext.Items["game"] as Game;
-            _repository.Game.Delete(game);
-            await _repository.SaveAsync();
+            Task.Run(() => _gameService.DeleteGameForDeveloper());
             return NoContent();
         }
     }

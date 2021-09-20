@@ -5,20 +5,25 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using SteamAchievements.Application.Services.AchievementsService;
+using SteamAchievements.Application.Services.RepositoryManager;
 
-namespace SteamAchievements.Infrastructure.ActionFilters
+namespace SteamAchievements.Application.ActionFilters
 {
     public class ValidateAchievementForGameExistsAttribute : IAsyncActionFilter
     {
         private readonly ILoggerManager _logger;
+        private readonly IAchievementService _achievementService;
         private readonly IRepositoryManager _repository;
         private readonly IMapper _mapper;
 
-        public ValidateAchievementForGameExistsAttribute(ILoggerManager logger, IRepositoryManager repository, IMapper mapper)
+        public ValidateAchievementForGameExistsAttribute(ILoggerManager logger, IRepositoryManager repository, 
+            IMapper mapper, IAchievementService achievementService)
         {
             _logger = logger;
             _repository = repository;
             _mapper = mapper;
+            _achievementService = achievementService;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -34,7 +39,8 @@ namespace SteamAchievements.Infrastructure.ActionFilters
                 return;
             }
 
-            var achievement = game.Achievements.FirstOrDefault(a => a.Id == achievementId);
+            var achievement = game.Achievements
+                .FirstOrDefault(a => a.Id == achievementId);
             
             if (achievement == null)
             {
@@ -43,7 +49,7 @@ namespace SteamAchievements.Infrastructure.ActionFilters
             }
             else
             {
-                context.HttpContext.Items.Add("achievement", achievement);
+                _achievementService.CurrentAchievement = achievement;
                 await next();
             }
         }

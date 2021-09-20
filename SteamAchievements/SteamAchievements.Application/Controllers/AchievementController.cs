@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using SteamAchievements.Infrastructure.Contracts;
+﻿using Microsoft.AspNetCore.Mvc;
+using SteamAchievements.Application.ActionFilters;
 using SteamAchievements.Application.DataTransferObjects.Achievements;
-using SteamAchievements.Infrastructure.Entities.Models;
-using Microsoft.AspNetCore.Mvc;
-using SteamAchievements.Infrastructure.ActionFilters;
+using SteamAchievements.Application.Services.AchievementsService;
+using System;
+using System.Threading.Tasks;
 
 namespace SteamAchievements.Application.Controllers
 {
@@ -15,22 +11,18 @@ namespace SteamAchievements.Application.Controllers
     [ApiController]
     public class AchievementController : ControllerBase
     {
-        private readonly IRepositoryManager _repository;
-        private readonly IMapper _mapper;
+        private readonly IAchievementService _achievementService;
 
-        public AchievementController(IRepositoryManager repository, IMapper mapper)
+        public AchievementController(IAchievementService achievementService)
         {
-            _repository = repository;
-            _mapper = mapper;
+            _achievementService = achievementService;
         }
 
         [HttpGet("{id}", Name = "GetAchievementForGame")]
         [ServiceFilter(typeof(ValidateAchievementForGameExistsAttribute))]
         public IActionResult GetAchievementForGame(Guid gameId, Guid id)
         {
-            var achievementForGame = HttpContext.Items["achievement"] as Achievement;
-
-            var achievement = _mapper.Map<AchievementDto>(achievementForGame);
+            var achievement = _achievementService.GetAchievementsForGame();
 
             return Ok(achievement);
         }
@@ -39,11 +31,7 @@ namespace SteamAchievements.Application.Controllers
         [ServiceFilter(typeof(ValidateGameExistsAttribute))]
         public IActionResult GetAchievementsForGame(Guid gameId)
         {
-            var game = HttpContext.Items["game"] as Game;
-            
-            var achievements = game.Achievements.ToList();
-
-            var achievementsDto = _mapper.Map<IEnumerable<AchievementDto>>(achievements);
+            var achievementsDto = _achievementService.GetAchievementsForGame();
 
             return Ok(achievementsDto);
         }
@@ -53,10 +41,7 @@ namespace SteamAchievements.Application.Controllers
         [ServiceFilter(typeof(ValidateGameExistsAttribute))]
         public async Task<IActionResult> CreateAchievementForGame(Guid gameId, [FromBody] AchievementForManipulationDto achievement)
         {
-            var achievementEntity = _mapper.Map<Achievement>(achievement);
-            _repository.Achievement.CreateAchievementForGame(gameId, achievementEntity);
-            await _repository.SaveAsync();
-            var achievementToReturn = _mapper.Map<AchievementDto>(achievementEntity);
+            var achievementToReturn = await _achievementService.CreateAchievementForGame(gameId, achievement);
             return CreatedAtRoute("GetAchievementForGame", new
             {
                 gameId,
@@ -67,11 +52,9 @@ namespace SteamAchievements.Application.Controllers
 
         [HttpDelete("{id}")]
         [ServiceFilter(typeof(ValidateAchievementForGameExistsAttribute))]
-        public async Task<IActionResult> DeleteAchievementForGame(Guid gameId, Guid id)
+        public IActionResult DeleteAchievementForGame(Guid gameId, Guid id)
         {
-            var achievementForGame = HttpContext.Items["achievement"] as Achievement;
-            _repository.Achievement.Delete(achievementForGame);
-            await _repository.SaveAsync();
+            _achievementService.DeleteAchievementForGame();
             return NoContent();
         }
     }

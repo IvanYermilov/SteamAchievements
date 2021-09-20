@@ -1,22 +1,23 @@
-﻿using SteamAchievements.Infrastructure.Contracts;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using SteamAchievements.Infrastructure.Services;
+using SteamAchievements.Application.Services.RepositoryManager;
+using SteamAchievements.Infrastructure.Contracts;
 using System;
 using System.Threading.Tasks;
+using SteamAchievements.Application.Services.DeveloperService;
 
-namespace SteamAchievements.Infrastructure.ActionFilters
+namespace SteamAchievements.Application.ActionFilters
 {
     public class ValidateDeveloperExistsAttribute : IAsyncActionFilter
     {
-        private readonly Contracts.IRepositoryManager _repository;
-        private readonly Contracts.ILoggerManager _logger;
-        private readonly CurrentSessionStateService _currentSessionService;
-        public ValidateDeveloperExistsAttribute(IRepositoryManager repository, ILoggerManager logger, CurrentSessionStateService currentSessionService)
+        private readonly IRepositoryManager _repository;
+        private readonly ILoggerManager _logger;
+        private readonly IDeveloperService _developerService;
+        public ValidateDeveloperExistsAttribute(IRepositoryManager repository, ILoggerManager logger, IDeveloperService developerService)
         {
             _repository = repository;
             _logger = logger;
-            _currentSessionService = currentSessionService;
+            _developerService = developerService;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -32,7 +33,7 @@ namespace SteamAchievements.Infrastructure.ActionFilters
             }
             else
             {
-                _currentSessionService.CurrentDeveloper = developer;
+                _developerService.CurrentDeveloper = developer;
                 await next();
             }
         }

@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
+using SteamAchievements.Infrastructure.Contracts;
 
-namespace SteamAchievements.Infrastructure.Contracts
+namespace SteamAchievements.Application.Services.RepositoryManager
 {
     public interface IRepositoryManager
     {

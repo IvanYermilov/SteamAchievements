@@ -1,14 +1,12 @@
-﻿using AutoMapper;
-using SteamAchievements.Infrastructure.Contracts;
+﻿using Microsoft.AspNetCore.Mvc;
+using SteamAchievements.Application.ActionFilters;
+using SteamAchievements.Application.DataTransferObjects.Developers;
+using SteamAchievements.Application.Services.DeveloperService;
 using SteamAchievements.Infrastructure.Entities.Models;
-using Microsoft.AspNetCore.Mvc;
-using SteamAchievements.Infrastructure.ActionFilters;
-using SteamAchievements.Infrastructure.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SteamAchievements.Application.DataTransferObjects.Developers;
 
 namespace SteamAchievements.Application.Controllers
 {
@@ -16,86 +14,50 @@ namespace SteamAchievements.Application.Controllers
     [ApiController]
     public class DeveloperController : ControllerBase
     {
-        private readonly IRepositoryManager _repository;
-        private readonly ILoggerManager _logger;
-        private readonly IMapper _mapper;
-        private readonly CurrentSessionStateService _currentSessionService;
+        private readonly IDeveloperService _developerService;
 
-        public DeveloperController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, CurrentSessionStateService currentSessionService)
+        public DeveloperController(IDeveloperService developerService)
         {
-            _repository = repository;
-            _logger = logger;
-            _mapper = mapper;
-            _currentSessionService = currentSessionService;
+            _developerService = developerService;
         }
 
         [HttpGet("{developerId}", Name = "DeveloperById")]
         public async Task<IActionResult> GetDeveloper(Guid developerId)
         {
-            var developer = await _repository.Developer.GetDeveloperAsync(developerId, trackChanges: false);
-            if (developer == null)
-            {
-                _logger.LogInfo($"Developer with id: {developerId} doesn't exist in the database.");
-
-                return NotFound();
-            }
-            else
-            {
-                var developerDto = _mapper.Map<DeveloperDto>(developer);
-                return Ok(developerDto);
-            }
+            var developer = await _developerService.GetDeveloper(developerId, trackChanges:false);
+            if (developer == null) return NotFound();
+            else return Ok(developer);
         }
 
         [HttpGet("for-game-by/{id}")]
         public async Task<IActionResult> GetDevelopersForGame(Guid id)
         {
-            var developer = await _repository.Developer.GetDevelopersForGameAsync(id, trackChanges: false);
-            if (developer == null)
-            {
-                _logger.LogInfo($"Developers for game with id: {id} doesn't exist in the database.");
-
-                return NotFound();
-            }
-            else
-            {
-                var developerDto = _mapper.Map<IEnumerable<DeveloperDto>>(developer);
-                return Ok(developerDto);
-            }
+            var developers = await _developerService.GetDevelopersForGame(id, trackChanges: false);
+            if (developers == null) return NotFound();
+            else return Ok(developers);
         }
 
         [HttpGet(Name = "GetDevelopers")]
         public async Task<IActionResult> GetAllDevelopers()
         {
-            var developers = await _repository.Developer.GetAllDevelopersAsync(trackChanges: false);
-            var developerDto = _mapper.Map<IEnumerable<DeveloperDto>>(developers);
-            return Ok(developerDto);
+            var developers = await _developerService.GetAllDevelopers(trackChanges: false);
+            return Ok(developers);
         }
 
         [HttpPost(Name = "CreateDeveloper")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateDeveloper([FromBody] DeveloperForManipulationDto developer)
         {
-            var developerEntity = _mapper.Map<Developer>(developer);
+            var createdDeveloper = _developerService.CreateDeveloper(developer);
 
-            _repository.Developer.Create(developerEntity);
-            await _repository.SaveAsync();
-
-            var developerToReturn = _mapper.Map<DeveloperDto>(developerEntity);
-
-            return CreatedAtRoute("DeveloperById", new { id = developerToReturn.Id }, developerToReturn);
+            return CreatedAtRoute("DeveloperById", new { id = createdDeveloper.Id }, createdDeveloper);
         }
 
         [HttpDelete("{developerId}")]
         [ServiceFilter(typeof(ValidateDeveloperExistsAttribute))]
-        public async Task<IActionResult> DeleteDeveloper(Guid developerId)
+        public IActionResult DeleteDeveloper(Guid developerId)
         {
-            var developer = _currentSessionService.CurrentDeveloper;
-            foreach (var game in developer.Games)
-            {
-                if (game.Developers.Count() == 1 && game.Developers.Any(d => d.Id.Equals(developer.Id))) _repository.Game.Delete(game);
-            }
-            _repository.Developer.Delete(developer);
-            await _repository.SaveAsync();
+            _developerService.DeleteDeveloper();
             return NoContent();
         }
     }

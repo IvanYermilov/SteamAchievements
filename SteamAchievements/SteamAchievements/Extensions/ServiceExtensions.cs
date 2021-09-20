@@ -18,6 +18,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using SteamAchievements.Application.Services.AchievementsService;
+using SteamAchievements.Application.Services.AuthenticationService;
+using SteamAchievements.Application.Services.DeveloperService;
+using SteamAchievements.Application.Services.GameService;
+using SteamAchievements.Application.Services.RepositoryManager;
 
 namespace SteamAchievements.Extensions
 {
@@ -41,8 +46,8 @@ namespace SteamAchievements.Extensions
         public static void ConfigureSqlContext(this IServiceCollection services,
             IConfiguration configuration) =>
             services.AddDbContext<RepositoryContext>(opts =>
-            opts.UseSqlServer(configuration.GetConnectionString("sqlConnection"), b =>
-                b.MigrationsAssembly("SteamAchievements")));
+                opts.UseSqlServer(configuration.GetConnectionString("sqlConnection"), b =>
+                    b.MigrationsAssembly("SteamAchievements")));
 
         public static void ConfigureRepositoryManager(this IServiceCollection services) =>
             services.AddScoped<IRepositoryManager, RepositoryManager>();
@@ -61,24 +66,24 @@ namespace SteamAchievements.Extensions
                 if (newtonsoftJsonOutputFormatter != null)
                 {
                     newtonsoftJsonOutputFormatter
-                      .SupportedMediaTypes
-                      .Add("application/vnd.kek.hateoas+json");
+                        .SupportedMediaTypes
+                        .Add("application/vnd.kek.hateoas+json");
                     newtonsoftJsonOutputFormatter
-                      .SupportedMediaTypes
-                      .Add("application/vnd.kek.apiroot+json");
+                        .SupportedMediaTypes
+                        .Add("application/vnd.kek.apiroot+json");
                 }
 
                 var xmlOutputFormatter = config.OutputFormatters
-                .OfType<XmlDataContractSerializerOutputFormatter>()?.FirstOrDefault();
+                    .OfType<XmlDataContractSerializerOutputFormatter>()?.FirstOrDefault();
 
                 if (xmlOutputFormatter != null)
                 {
                     xmlOutputFormatter
-                      .SupportedMediaTypes
-                      .Add("application/vnd.kek.hateoas+xml");
+                        .SupportedMediaTypes
+                        .Add("application/vnd.kek.hateoas+xml");
                     xmlOutputFormatter
-                      .SupportedMediaTypes
-                      .Add("application/vnd.kek.apiroot+xml");
+                        .SupportedMediaTypes
+                        .Add("application/vnd.kek.apiroot+xml");
                 }
             });
         }
@@ -99,14 +104,11 @@ namespace SteamAchievements.Extensions
 
         public static void ConfigureHttpCacheHeaders(this IServiceCollection services) =>
             services.AddHttpCacheHeaders((expirationOpt) =>
-            {
-                expirationOpt.MaxAge = 65;
-                expirationOpt.CacheLocation = CacheLocation.Private;
-            },
-                (validationOpt) =>
                 {
-                    validationOpt.MustRevalidate = true;
-                });
+                    expirationOpt.MaxAge = 65;
+                    expirationOpt.CacheLocation = CacheLocation.Private;
+                },
+                (validationOpt) => { validationOpt.MustRevalidate = true; });
 
         public static void ConfigureRateLimitingOptions(this IServiceCollection services)
         {
@@ -115,15 +117,12 @@ namespace SteamAchievements.Extensions
                 new RateLimitRule
                 {
                     Endpoint = "*",
-                    Limit= 50,
+                    Limit = 50,
                     Period = "5m"
                 }
             };
 
-            services.Configure<IpRateLimitOptions>(opt =>
-            {
-                opt.GeneralRules = rateLimitRules;
-            });
+            services.Configure<IpRateLimitOptions>(opt => { opt.GeneralRules = rateLimitRules; });
 
             services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
             services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
@@ -222,8 +221,8 @@ namespace SteamAchievements.Extensions
                         {
                             Reference = new OpenApiReference
                             {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
                             },
                             Name = "Bearer",
                         },
@@ -231,6 +230,14 @@ namespace SteamAchievements.Extensions
                     }
                 });
             });
+        }
+
+        public static void ConfigureServices(this IServiceCollection services)
+        {
+            services.AddScoped<IAchievementService, AchievementService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IDeveloperService, DeveloperService>();
+            services.AddScoped<IGameService, GameService>();
         }
     }
 }

@@ -1,10 +1,9 @@
-﻿using AutoMapper;
-using SteamAchievements.Infrastructure.Entities.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using SteamAchievements.Infrastructure.ActionFilters;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
+using SteamAchievements.Application.ActionFilters;
 using SteamAchievements.Application.DataTransferObjects.Users;
+using SteamAchievements.Application.Services.AuthenticationService;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SteamAchievements.Application.Controllers
 {
@@ -12,33 +11,27 @@ namespace SteamAchievements.Application.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IMapper _mapper;
-        private readonly UserManager<User> _userManager;
-        public AuthenticationController(IMapper mapper, UserManager<User> userManager)
+        private readonly IAuthenticationService _authenticationService;
+
+        public AuthenticationController(IAuthenticationService authenticationService)
         {
-            _mapper = mapper;
-            _userManager = userManager;
+            _authenticationService = authenticationService;
         }
 
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> RegisterUser([FromBody] UserForManipulationDto userForRegistration)
         {
-            var user = _mapper.Map<User>(userForRegistration);
-
-            var result = await _userManager.CreateAsync(user, userForRegistration.Password);
-            if (!result.Succeeded)
+            var result = await _authenticationService.RegisterUser(userForRegistration);
+            if (result.Any(result => !result.Succeeded))
             {
-                foreach (var error in result.Errors)
+                foreach (var error in result.SelectMany(resultItem => resultItem.Errors))
                 {
                     ModelState.TryAddModelError(error.Code, error.Description);
                 }
 
                 return BadRequest(ModelState);
             }
-
-            await _userManager.AddToRolesAsync(user, userForRegistration.Roles);
-
             return StatusCode(201);
         }
     }

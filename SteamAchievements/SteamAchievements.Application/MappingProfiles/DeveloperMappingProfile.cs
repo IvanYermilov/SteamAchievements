@@ -16,8 +16,6 @@ namespace SteamAchievements.Application.MappingProfiles
             CreateMap<DeveloperForManipulationDto, Developer>();
 
             CreateMap<DeveloperForManipulationDto, Developer>().ReverseMap();
-
-            CreateMap<Developer, DeveloperDto>();
         }
     }
 }

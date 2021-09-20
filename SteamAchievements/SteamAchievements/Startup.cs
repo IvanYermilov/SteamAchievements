@@ -5,12 +5,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog;
-using SteamAchievements.Infrastructure.ActionFilters;
+using SteamAchievements.Application.ActionFilters;
 using SteamAchievements.Extensions;
+using SteamAchievements.Infrastructure.Contracts;
 using System.IO;
 using System.Reflection;
-using SteamAchievements.Infrastructure.Contracts;
-using SteamAchievements.Infrastructure.Services;
 
 namespace SteamAchievements
 {
@@ -38,7 +37,6 @@ namespace SteamAchievements
             //});
             services.ConfigureSqlContext(Configuration);
             services.AddAutoMapper(assembly);
-            services.AddControllers();
             services.AddControllers(config =>
             {
                 config.RespectBrowserAcceptHeader = true;
@@ -51,7 +49,8 @@ namespace SteamAchievements
             .AddXmlDataContractSerializerFormatters();
             //    .AddCustomCSVFormatter();
             //services.AddCustomMediaTypes();
-            services.AddScoped<CurrentSessionStateService>();
+            services.AddHttpContextAccessor();
+            services.ConfigureServices();
             services.AddScoped<ValidationFilterAttribute>();
             services.AddScoped<ValidateDeveloperExistsAttribute>();
             services.AddScoped<ValidateGameForDeveloperExistsAttribute>();

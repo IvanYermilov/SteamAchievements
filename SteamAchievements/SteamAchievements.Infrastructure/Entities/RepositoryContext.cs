@@ -1,7 +1,7 @@
-﻿using Entities.Configuration;
-using SteamAchievements.Infrastructure.Entities.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SteamAchievements.Infrastructure.Entities.Configuration;
+using SteamAchievements.Infrastructure.Entities.Models;
 
 namespace SteamAchievements.Infrastructure.Entities
 {

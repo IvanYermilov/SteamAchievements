@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Linq;
 
-namespace SteamAchievements.Infrastructure.ActionFilters
+namespace SteamAchievements.Application.ActionFilters
 {
     public class ValidationFilterAttribute : IActionFilter
     {

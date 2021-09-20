@@ -3,17 +3,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Threading.Tasks;
+using SteamAchievements.Application.Services.GameService;
+using SteamAchievements.Application.Services.RepositoryManager;
 
-namespace SteamAchievements.Infrastructure.ActionFilters
+namespace SteamAchievements.Application.ActionFilters
 {
     public class ValidateGameExistsAttribute : IAsyncActionFilter
     {
-        private readonly Contracts.IRepositoryManager _repository;
-        private readonly Contracts.ILoggerManager _logger;
-        public ValidateGameExistsAttribute(IRepositoryManager repository, ILoggerManager logger)
+        private readonly IRepositoryManager _repository;
+        private readonly IGameService _gameService;
+        private readonly ILoggerManager _logger;
+        public ValidateGameExistsAttribute(IRepositoryManager repository, IGameService gameService, ILoggerManager logger)
         {
             _repository = repository;
             _logger = logger;
+            _gameService = gameService;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -28,7 +32,7 @@ namespace SteamAchievements.Infrastructure.ActionFilters
                 return;
             }
 
-            context.HttpContext.Items.Add("game", game);
+            _gameService.CurrentGame = game;
             await next();
         }
     }

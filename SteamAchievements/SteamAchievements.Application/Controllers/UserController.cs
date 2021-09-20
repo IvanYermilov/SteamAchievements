@@ -1,9 +1,6 @@
-﻿using AutoMapper;
-using SteamAchievements.Infrastructure.Contracts;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
+using SteamAchievements.Application.Services.UserService;
 using System.Threading.Tasks;
-using SteamAchievements.Application.DataTransferObjects.Users;
 
 namespace SteamAchievements.Application.Controllers
 {
@@ -11,16 +8,12 @@ namespace SteamAchievements.Application.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IRepositoryManager _repository;
-        private readonly ILoggerManager _logger;
-        private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
 
-        public UserController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
+        public UserController(IUserService userService)
         {
-            _repository = repository;
-            _logger = logger;
-            _mapper = mapper;
+            _userService = userService;
         }
 
         /// <summary> 
@@ -30,9 +23,8 @@ namespace SteamAchievements.Application.Controllers
         [HttpGet(Name = "GetUsers")]
         public async Task<IActionResult> GetUsers()
         {
-            var  users = await _repository.User.GetAllUsersAsync(trackChanges: false);
-            var usersDto = _mapper.Map<IEnumerable<UserDto>>(users);
-            return Ok(usersDto);
+            var users = await _userService.GetUsers();
+            return Ok(users);
         }
     }
 }
