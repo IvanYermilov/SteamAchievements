@@ -11,6 +11,7 @@ using SteamAchievements.Infrastructure.Entities.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SteamAchievements.Application.Controllers;
@@ -67,38 +68,28 @@ namespace SteamAchievements.Application.Services.GameService
             await _repository.SaveAsync();
         }
 
-        public async Task<ModelStateDictionary> PartiallyUpdateGame(JsonPatchDocument<GameForManipulationDto> patchDoc, GameController controller)
+        public async Task PartiallyUpdateGameAsync(GameForPatchDto gameToPatch)
         {
-            var gameToPatch = _mapper.Map<GameForManipulationDto>(CurrentGame);
-            patchDoc.ApplyTo(gameToPatch, controller.ModelState);
-            controller.TryValidateModel(gameToPatch);
-            if (!controller.ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the patch document");
-                return controller.ModelState;
-            }
             _mapper.Map(gameToPatch, CurrentGame);
             await _repository.SaveAsync();
-            return controller.ModelState;
-
         }
         //public async void PartiallyUpdateGame(JsonPatchDocument<GameForManipulationDto> patchDoc)
         //{
-        //var results = new List<ValidationResult>();
-        //var context = new System.ComponentModel.DataAnnotations.ValidationContext(CurrentGame, null, null);
-        //var gameToPatch = _mapper.Map<GameForManipulationDto>(CurrentGame);
-        //var actionContextAccessor = _serviceProvider.GetService<IActionContextAccessor>();
-        //var actionContext = actionContextAccessor.ActionContext;
+        //    var results = new List<ValidationResult>();
+        //    var context = new System.ComponentModel.DataAnnotations.ValidationContext(CurrentGame, null, null);
+        //    var gameToPatch = _mapper.Map<GameForManipulationDto>(CurrentGame);
+        //    var actionContextAccessor = _serviceProvider.GetService<IActionContextAccessor>();
+        //    var actionContext = actionContextAccessor.ActionContext;
 
-        //patchDoc.ApplyTo(gameToPatch, actionContext?.ModelState);
-        //Validator.TryValidateObject(CurrentGame, context, results);
-        //if (!actionContext.ModelState.IsValid)
-        //{
-        //    _logger.LogError("Invalid model state for the patch document");
-        //    return;
-        //}
-        //_mapper.Map(gameToPatch, CurrentGame);
-        //await _repository.SaveAsync();
+        //    patchDoc.ApplyTo(gameToPatch, actionContext?.ModelState);
+        //    Validator.TryValidateObject(CurrentGame, context, results);
+        //    if (!actionContext.ModelState.IsValid)
+        //    {
+        //        _logger.LogError("Invalid model state for the patch document");
+        //        return;
+        //    }
+        //    _mapper.Map(gameToPatch, CurrentGame);
+        //    await _repository.SaveAsync();
         //}
 
         public async void DetachGameForDeveloper(Guid developerId)
@@ -113,7 +104,13 @@ namespace SteamAchievements.Application.Services.GameService
             _repository.Game.Delete(CurrentGame);
             await _repository.SaveAsync();
         }
-        public bool CheckPatchDocIsNull(JsonPatchDocument<GameForManipulationDto> patchDoc)
+
+        public GameForPatchDto GetGameForPatch()
+        {
+            return _mapper.Map<GameForPatchDto>(CurrentGame);
+        }
+
+        public bool CheckPatchDocIsNull(JsonPatchDocument<GameForPatchDto> patchDoc)
         {
             if (patchDoc != null) return false;
             _logger.LogError("patchDoc object sent from client is null.");

@@ -61,13 +61,19 @@ namespace SteamAchievements.Application.Controllers
 
         [HttpPatch("{gameId}")]
         [ServiceFilter(typeof(ValidateGameForDeveloperExistsAttribute))]
-        public async Task<IActionResult> PartiallyUpdateEmployeeForCompany(Guid developerId, Guid gameId, [FromBody] JsonPatchDocument<GameForManipulationDto> patchDoc)
+        public async Task<IActionResult> PartiallyUpdateEmployeeForCompany(Guid developerId, Guid gameId, [FromBody] JsonPatchDocument<GameForPatchDto> patchDoc)
         {
-            var controller = this;
-            var isPatchDocNull = await Task.Run(() =>_gameService.CheckPatchDocIsNull(patchDoc));
+            var isPatchDocNull = _gameService.CheckPatchDocIsNull(patchDoc);
             if (isPatchDocNull) return BadRequest("patchDoc object is null");
-            var modelState = await _gameService.PartiallyUpdateGame(patchDoc, controller);
-            if (!modelState.IsValid) return UnprocessableEntity(modelState);
+            var gameToPatch = _gameService.GetGameForPatch();
+            patchDoc.ApplyTo(gameToPatch, ModelState);
+            TryValidateModel(gameToPatch);
+            if (!ModelState.IsValid)
+            {
+                //_logger.LogError("Invalid model state for the patch document");
+                return UnprocessableEntity(ModelState);
+            }
+            await _gameService.PartiallyUpdateGameAsync(gameToPatch);
             return NoContent();
         }
 

@@ -16,9 +16,10 @@ namespace SteamAchievements.Application.Services.GameService
         public Task<IEnumerable<GameDto>> GetGamesForDeveloper();
         public Task<GameDto> CreateGameForDeveloper(GameForManipulationDto game);
         public void AddGameForDeveloper();
-        public Task<ModelStateDictionary> PartiallyUpdateGame(JsonPatchDocument<GameForManipulationDto> patchDoc, GameController controller);
+        public Task PartiallyUpdateGameAsync(GameForPatchDto gameToPatch);
         public void DetachGameForDeveloper(Guid developerId);
         public void DeleteGameForDeveloper();
-        public bool CheckPatchDocIsNull(JsonPatchDocument<GameForManipulationDto> patchDoc);
+        public GameForPatchDto GetGameForPatch();
+        public bool CheckPatchDocIsNull(JsonPatchDocument<GameForPatchDto> patchDoc);
     }
 }

@@ -13,6 +13,8 @@ namespace SteamAchievements.Application.MappingProfiles
             CreateMap<GameForManipulationDto, Game>();
 
             CreateMap<GameForManipulationDto, Game>().ReverseMap();
+        
+            CreateMap<Game, GameForPatchDto>().ReverseMap();
         }
     }
 }
