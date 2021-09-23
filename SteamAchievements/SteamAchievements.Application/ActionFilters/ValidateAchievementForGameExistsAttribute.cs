@@ -1,12 +1,11 @@
-﻿using AutoMapper;
-using SteamAchievements.Infrastructure.Contracts;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using SteamAchievements.Application.Services.AchievementsService;
+using SteamAchievements.Application.Services.GameService;
+using SteamAchievements.Infrastructure.Contracts;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using SteamAchievements.Application.Services.AchievementsService;
-using SteamAchievements.Application.Services.RepositoryManager;
 
 namespace SteamAchievements.Application.ActionFilters
 {
@@ -14,23 +13,21 @@ namespace SteamAchievements.Application.ActionFilters
     {
         private readonly ILoggerManager _logger;
         private readonly IAchievementService _achievementService;
-        private readonly IRepositoryManager _repository;
-        private readonly IMapper _mapper;
+        private readonly IGameService _gameService;
 
-        public ValidateAchievementForGameExistsAttribute(ILoggerManager logger, IRepositoryManager repository, 
-            IMapper mapper, IAchievementService achievementService)
+        public ValidateAchievementForGameExistsAttribute(ILoggerManager logger, IAchievementService achievementService,
+            IGameService gameService)
         {
             _logger = logger;
-            _repository = repository;
-            _mapper = mapper;
             _achievementService = achievementService;
+            _gameService = gameService;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var gameId = (Guid)context.ActionArguments["gameId"];
             var achievementId = (Guid) context.ActionArguments["id"];
-            var game = await _repository.Game.GetGameById(gameId, true);
+            var game = await _gameService.GetGameByIdAsync(gameId);
 
             if (game == null)
             {

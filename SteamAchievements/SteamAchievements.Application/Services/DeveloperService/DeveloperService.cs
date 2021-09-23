@@ -14,6 +14,7 @@ namespace SteamAchievements.Application.Services.DeveloperService
     public class DeveloperService : IDeveloperService
     {
         public Developer CurrentDeveloper { get; set; }
+        public DeveloperDto CurrentDeveloperDto => _mapper.Map<DeveloperDto>(CurrentDeveloper);
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
@@ -25,9 +26,9 @@ namespace SteamAchievements.Application.Services.DeveloperService
             _mapper = mapper;
         }
 
-        public async Task<DeveloperDto> GetDeveloper(Guid developerId, bool trackChanges)
+        public async Task<Developer> GetDeveloperByIdAsync(Guid developerId, bool trackChanges)
         {
-            var developer = await _repository.Developer.GetDeveloperAsync(developerId, trackChanges: false);
+            var developer = await _repository.Developer.GetDeveloperAsync(developerId, trackChanges);
             if (developer == null)
             {
                 _logger.LogInfo($"Developer with id: {developerId} doesn't exist in the database.");
@@ -36,7 +37,7 @@ namespace SteamAchievements.Application.Services.DeveloperService
             else
             {
                 var developerDto = _mapper.Map<DeveloperDto>(developer);
-                return developerDto;
+                return developer;
             }
         }
         public async Task<IEnumerable<DeveloperDto>> GetDevelopersForGame(Guid id, bool trackChanges)

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using SteamAchievements.Infrastructure.Contracts;
-using Entities.ErrorModel;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using SteamAchievements.Infrastructure.Contracts;
+using SteamAchievements.Infrastructure.Entities.ErrorModel;
+using System.Net;
 
 namespace SteamAchievements.Extensions
 {

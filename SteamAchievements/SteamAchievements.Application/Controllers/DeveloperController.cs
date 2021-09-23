@@ -22,12 +22,13 @@ namespace SteamAchievements.Application.Controllers
         }
 
         [HttpGet("{developerId}", Name = "DeveloperById")]
-        public async Task<IActionResult> GetDeveloper(Guid developerId)
+        [ServiceFilter(typeof(ValidateDeveloperExistsAttribute))]
+        public IActionResult GetDeveloper(Guid developerId)
         {
-            var developer = await _developerService.GetDeveloper(developerId, trackChanges:false);
+            var developer = _developerService.CurrentDeveloperDto;
             if (developer == null) return NotFound();
             else return Ok(developer);
-        }
+        } 
 
         [HttpGet("for-game-by/{id}")]
         public async Task<IActionResult> GetDevelopersForGame(Guid id)

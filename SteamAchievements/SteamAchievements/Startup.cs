@@ -85,7 +85,7 @@ namespace SteamAchievements
             {
                 app.UseHsts();
             }
-
+            
             app.ConfigureExceptionHandler(logger);
 
             app.UseHttpsRedirection();

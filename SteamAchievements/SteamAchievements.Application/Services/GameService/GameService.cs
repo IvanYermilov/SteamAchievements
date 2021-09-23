@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
 using SteamAchievements.Application.DataTransferObjects.Games;
 using SteamAchievements.Application.Services.DeveloperService;
 using SteamAchievements.Application.Services.RepositoryManager;
@@ -10,36 +7,36 @@ using SteamAchievements.Infrastructure.Contracts;
 using SteamAchievements.Infrastructure.Entities.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using SteamAchievements.Application.Controllers;
-
+    
 namespace SteamAchievements.Application.Services.GameService
 {
     public class GameService : IGameService
     {
         public Game CurrentGame { get; set; }
+        public GameDto CurrentGameDto => _mapper.Map<GameDto>(CurrentGame);
         private readonly IRepositoryManager _repository;
         private readonly IDeveloperService _developerService;
-        private readonly IServiceProvider _serviceProvider;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
 
         public GameService(IRepositoryManager repository, IDeveloperService developerService, 
-                            IServiceProvider serviceProvider, ILoggerManager logger, IMapper mapper)
+            ILoggerManager logger, IMapper mapper)
         {
             _repository = repository;
-            _developerService = developerService;
-            _serviceProvider = serviceProvider;
+            _developerService = developerService;   
             _logger = logger;
             _mapper = mapper;
         }
 
-        public GameDto GetGame()
+        public async Task<Game> GetGameByIdAsync(Guid gameId)
         {
-            var game = _mapper.Map<GameDto>(CurrentGame);
+            return await _repository.Game.GetGameByIdAsync(gameId, true);
+        }
+
+        public async Task<Game> GetGameForDeveloperAsync(Guid developerId, Guid gameId, bool trackChanges)
+        {
+            var game = await _repository.Game.GetGameAsync(developerId, gameId, trackChanges);
             return game;
         }
 

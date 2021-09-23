@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using SteamAchievements.Application.Services.DeveloperService;
 using SteamAchievements.Application.Services.GameService;
-using SteamAchievements.Application.Services.RepositoryManager;
 using SteamAchievements.Infrastructure.Contracts;
 using System;
 using System.Threading.Tasks;
@@ -10,16 +10,17 @@ namespace SteamAchievements.Application.ActionFilters
 {
     public class ValidateGameForDeveloperExistsAttribute : IAsyncActionFilter
     {
-        private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IGameService _gameService;
+        private readonly IDeveloperService _developerService;
 
 
-        public ValidateGameForDeveloperExistsAttribute(IRepositoryManager repository, ILoggerManager logger, IGameService gameService)
+        public ValidateGameForDeveloperExistsAttribute(ILoggerManager logger, IGameService gameService,
+            IDeveloperService developerService)
         {
-            _repository = repository;
             _logger = logger;
             _gameService = gameService;
+            _developerService = developerService;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -28,7 +29,7 @@ namespace SteamAchievements.Application.ActionFilters
             var trackChanges = (method.Equals("PUT") || method.Equals("PATCH")) ? true : false;
 
             var developerId = (Guid)context.ActionArguments["developerId"];
-            var developer = await _repository.Developer.GetDeveloperAsync(developerId, false);
+            var developer = await _developerService.GetDeveloperByIdAsync(developerId, true);
 
             if (developer == null)
             {
@@ -38,12 +39,13 @@ namespace SteamAchievements.Application.ActionFilters
                 return;
             }
 
-            var id = (Guid)context.ActionArguments["gameId"];
-            var game = await _repository.Game.GetGameAsync(developerId, id, trackChanges);
+            var gameId = (Guid)context.ActionArguments["gameId"];
+            var game = await _gameService.GetGameForDeveloperAsync(developerId, gameId, trackChanges);
+
 
             if (game == null)
             {
-                _logger.LogInfo($"Game with id: {id} doesn't exist in the database.");
+                _logger.LogInfo($"Game with id: {gameId} doesn't exist in the database.");
                 context.Result = new NotFoundResult();
                 return;
             }

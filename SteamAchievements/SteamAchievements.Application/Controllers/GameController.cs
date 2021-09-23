@@ -5,6 +5,7 @@ using SteamAchievements.Application.DataTransferObjects.Games;
 using SteamAchievements.Application.Services.GameService;
 using System;
 using System.Threading.Tasks;
+using SteamAchievements.Infrastructure.Contracts;
 
 namespace SteamAchievements.Application.Controllers
 {
@@ -13,18 +14,19 @@ namespace SteamAchievements.Application.Controllers
     public class GameController : ControllerBase
     {
         private readonly IGameService _gameService;
+        private readonly ILoggerManager _logger;
 
-
-        public GameController(IGameService gameService)
+        public GameController(IGameService gameService, ILoggerManager logger)
         {
             _gameService = gameService;
+            _logger = logger;
         }
 
         [HttpGet("{gameId}", Name = "GetGameForDeveloper")]
         [ServiceFilter(typeof(ValidateGameForDeveloperExistsAttribute))]
         public IActionResult GetGameForDeveloper(Guid developerId, Guid gameId)
         {
-            var game = _gameService.GetGame();
+            var game = _gameService.CurrentGameDto;
 
             return Ok(game);
         }
@@ -70,7 +72,7 @@ namespace SteamAchievements.Application.Controllers
             TryValidateModel(gameToPatch);
             if (!ModelState.IsValid)
             {
-                //_logger.LogError("Invalid model state for the patch document");
+                _logger.LogError("Invalid model state for the patch document");
                 return UnprocessableEntity(ModelState);
             }
             await _gameService.PartiallyUpdateGameAsync(gameToPatch);

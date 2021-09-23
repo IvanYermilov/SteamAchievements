@@ -10,12 +10,10 @@ namespace SteamAchievements.Application.ActionFilters
 {
     public class ValidateDeveloperExistsAttribute : IAsyncActionFilter
     {
-        private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IDeveloperService _developerService;
         public ValidateDeveloperExistsAttribute(IRepositoryManager repository, ILoggerManager logger, IDeveloperService developerService)
         {
-            _repository = repository;
             _logger = logger;
             _developerService = developerService;
         }
@@ -23,7 +21,7 @@ namespace SteamAchievements.Application.ActionFilters
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var id = (Guid)context.ActionArguments["developerId"];
-            var developer = await _repository.Developer.GetDeveloperAsync(id, true);
+            var developer = await _developerService.GetDeveloperByIdAsync(id, true);
 
             if (developer == null)
             {

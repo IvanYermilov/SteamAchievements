@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Entities.ErrorModel
+namespace SteamAchievements.Infrastructure.Entities.ErrorModel
 {
     public class ErrorDetails
     {
