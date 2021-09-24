@@ -69,7 +69,7 @@ namespace SteamAchievements
             //services.AddHttpContextAccessor();
             services.AddAuthentication();
             services.ConfigureIdentity();
-            //services.ConfigureJWT(Configuration);
+            services.ConfigureJWT(Configuration);
             //services.AddScoped<IAuthenticationManager, AuthenticationManager>();
             //services.ConfigureSwagger();
         }

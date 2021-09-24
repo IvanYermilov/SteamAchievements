@@ -49,7 +49,7 @@ namespace SteamAchievements.Application.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateDeveloper([FromBody] DeveloperForManipulationDto developer)
         {
-            var createdDeveloper = _developerService.CreateDeveloper(developer);
+            var createdDeveloper = await _developerService.CreateDeveloper(developer);
 
             return CreatedAtRoute("DeveloperById", new { id = createdDeveloper.Id }, createdDeveloper);
         }

@@ -5,6 +5,7 @@ using SteamAchievements.Application.DataTransferObjects.Games;
 using SteamAchievements.Application.Services.GameService;
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using SteamAchievements.Infrastructure.Contracts;
 
 namespace SteamAchievements.Application.Controllers
@@ -22,7 +23,7 @@ namespace SteamAchievements.Application.Controllers
             _logger = logger;
         }
 
-        [HttpGet("{gameId}", Name = "GetGameForDeveloper")]
+        [HttpGet("{gameId}", Name = "GetGameForDeveloper"), Authorize(Roles = "Manager")]
         [ServiceFilter(typeof(ValidateGameForDeveloperExistsAttribute))]
         public IActionResult GetGameForDeveloper(Guid developerId, Guid gameId)
         {
@@ -31,7 +32,7 @@ namespace SteamAchievements.Application.Controllers
             return Ok(game);
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
         [ServiceFilter(typeof(ValidateDeveloperExistsAttribute))]
         public async Task<IActionResult> GetGamesForDeveloper(Guid developerId)
         {

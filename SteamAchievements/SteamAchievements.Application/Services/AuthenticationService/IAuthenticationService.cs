@@ -8,5 +8,7 @@ namespace SteamAchievements.Application.Services.AuthenticationService
     public interface IAuthenticationService
     {
         public Task<List<IdentityResult>> RegisterUser(UserForManipulationDto userForRegistration);
+        Task<bool> ValidateUser(UserForAuthenticationDto userForAuth);
+        Task<string> CreateToken();
     }
 }

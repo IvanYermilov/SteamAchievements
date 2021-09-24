@@ -18,11 +18,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using SteamAchievements.Application.Services.AchievementsService;
 using SteamAchievements.Application.Services.AuthenticationService;
 using SteamAchievements.Application.Services.DeveloperService;
 using SteamAchievements.Application.Services.GameService;
 using SteamAchievements.Application.Services.RepositoryManager;
+using SteamAchievements.Application.Services.UserService;
 
 namespace SteamAchievements.Extensions
 {
@@ -145,31 +149,32 @@ namespace SteamAchievements.Extensions
             builder.AddEntityFrameworkStores<RepositoryContext>().AddDefaultTokenProviders();
         }
 
-        //public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
-        //{
-        //    var jwtSettings = configuration.GetSection("JwtSettings");
-        //    var secretKey = Environment.GetEnvironmentVariable("SECRET");
+        public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
+        {
+            var jwtSettings = configuration.GetSection("JwtSettings");
+            var secretKey = Environment.GetEnvironmentVariable("SECRET");
 
-        //    services.AddAuthentication(opt => {
-        //        opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        //        opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        //    })
-        //        .AddJwtBearer(options =>
-        //        {
-        //            options.TokenValidationParameters = new TokenValidationParameters
-        //            {
-        //                ValidateIssuer = true,
-        //                ValidateAudience = true,
-        //                ValidateLifetime = true,
-        //                ValidateIssuerSigningKey = true,
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
 
-        //                ValidIssuer = jwtSettings.GetSection("validIssuer").Value,
-        //                ValidAudience = jwtSettings.GetSection("validAudience").Value,
-        //                IssuerSigningKey = new
-        //                    SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
-        //            };
-        //        });
-        //}
+                        ValidIssuer = jwtSettings.GetSection("validIssuer").Value,
+                        ValidAudience = jwtSettings.GetSection("validAudience").Value,
+                        IssuerSigningKey = new
+                            SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+                    };
+                });
+        }
 
         public static void ConfigureSwagger(this IServiceCollection services)
         {
@@ -238,6 +243,7 @@ namespace SteamAchievements.Extensions
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IDeveloperService, DeveloperService>();
             services.AddScoped<IGameService, GameService>();
+            services.AddScoped<IUserService, UserService>();
         }
     }
 }

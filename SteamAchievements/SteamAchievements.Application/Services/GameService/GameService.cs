@@ -7,6 +7,7 @@ using SteamAchievements.Infrastructure.Contracts;
 using SteamAchievements.Infrastructure.Entities.Models;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
     
 namespace SteamAchievements.Application.Services.GameService
