@@ -4,11 +4,9 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NLog;
+using Microsoft.Extensions.Logging;
 using SteamAchievements.Application.ActionFilters;
 using SteamAchievements.Extensions;
-using SteamAchievements.Infrastructure.Contracts;
-using System.IO;
 using System.Reflection;
 
 namespace SteamAchievements
@@ -17,7 +15,6 @@ namespace SteamAchievements
     {
         public Startup(IConfiguration configuration)
         {
-            LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
             Configuration = configuration;
         }
 
@@ -29,7 +26,6 @@ namespace SteamAchievements
             var assembly = Assembly.Load("SteamAchievements.Application");
             services.ConfigureCors();
             services.ConfigureIISIntegration();
-            services.ConfigureLoggerService();
             services.ConfigureRepositoryManager();
             //services.Configure<ApiBehaviorOptions>(options =>
             //{
@@ -75,7 +71,7 @@ namespace SteamAchievements
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerManager logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {

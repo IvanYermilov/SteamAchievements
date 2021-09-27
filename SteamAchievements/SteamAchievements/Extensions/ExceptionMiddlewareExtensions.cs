@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using SteamAchievements.Infrastructure.Contracts;
+using Microsoft.Extensions.Logging;
 using SteamAchievements.Infrastructure.Entities.ErrorModel;
 using System.Net;
 
@@ -9,7 +9,7 @@ namespace SteamAchievements.Extensions
 {
     public static class ExceptionMiddlewareExtensions
     {
-        public static void ConfigureExceptionHandler(this IApplicationBuilder app, ILoggerManager logger)
+        public static void ConfigureExceptionHandler(this IApplicationBuilder app, ILogger logger)
         {
             app.UseExceptionHandler(appError =>
             {

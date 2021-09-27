@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SteamAchievements.Application.DataTransferObjects.Developers;
 using SteamAchievements.Application.Services.RepositoryManager;
-using SteamAchievements.Infrastructure.Contracts;
 using SteamAchievements.Infrastructure.Entities.Models;
 using System;
 using System.Collections.Generic;
@@ -16,10 +15,10 @@ namespace SteamAchievements.Application.Services.DeveloperService
         public Developer CurrentDeveloper { get; set; }
         public DeveloperDto CurrentDeveloperDto => _mapper.Map<DeveloperDto>(CurrentDeveloper);
         private readonly IRepositoryManager _repository;
-        private readonly ILoggerManager _logger;
+        private readonly ILogger<DeveloperService> _logger;
         private readonly IMapper _mapper;
 
-        public DeveloperService(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
+        public DeveloperService(IRepositoryManager repository, ILogger<DeveloperService> logger, IMapper mapper)
         {
             _repository = repository;
             _logger = logger;
@@ -31,7 +30,7 @@ namespace SteamAchievements.Application.Services.DeveloperService
             var developer = await _repository.Developer.GetDeveloperAsync(developerId, trackChanges);
             if (developer == null)
             {
-                _logger.LogInfo($"Developer with id: {developerId} doesn't exist in the database.");
+                _logger.LogInformation($"Developer with id: {developerId} doesn't exist in the database.");
                 return null;
             }
             else
@@ -45,7 +44,7 @@ namespace SteamAchievements.Application.Services.DeveloperService
             var developers = await _repository.Developer.GetDevelopersForGameAsync(id, trackChanges: false);
             if (developers == null)
             {
-                _logger.LogInfo($"Developers for game with id: {id} doesn't exist in the database.");
+                _logger.LogInformation($"Developers for game with id: {id} doesn't exist in the database.");
                 return null;
             }
             else
@@ -60,7 +59,7 @@ namespace SteamAchievements.Application.Services.DeveloperService
             var developers = await _repository.Developer.GetAllDevelopersAsync(trackChanges: false);
             if (developers == null)
             {
-                _logger.LogInfo($"There are no any developers at the database.");
+                _logger.LogInformation($"There are no any developers at the database.");
                 return null;
             }
             else

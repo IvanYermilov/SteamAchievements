@@ -1,14 +1,14 @@
-﻿using SteamAchievements.Infrastructure.Contracts;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 using System.Linq;
 
 namespace SteamAchievements.Application.ActionFilters
 {
     public class ValidationFilterAttribute : IActionFilter
     {
-        private readonly ILoggerManager _logger;
-        public ValidationFilterAttribute(ILoggerManager logger)
+        private readonly ILogger<ValidationFilterAttribute> _logger;
+        public ValidationFilterAttribute(ILogger<ValidationFilterAttribute> logger)
         {
             _logger = logger;
         }

@@ -5,6 +5,7 @@ using SteamAchievements.Application.Services.AuthenticationService;
 using SteamAchievements.Infrastructure.Contracts;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace SteamAchievements.Application.Controllers
 {
@@ -12,13 +13,16 @@ namespace SteamAchievements.Application.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IAuthenticationService _authenticationService;
-        private readonly ILoggerManager _logger;
 
-        public AuthenticationController(IAuthenticationService authenticationService, ILoggerManager logger)
+        private readonly IAuthenticationService _authenticationService;
+        private readonly ILogger<AuthenticationController> _logger;
+
+        public AuthenticationController(IAuthenticationService authenticationService
+            , ILogger<AuthenticationController> logger)
         {
             _authenticationService = authenticationService;
             _logger = logger;
+            _logger.LogDebug(1, "NLog injected into HomeController");
         }
 
         [HttpPost]
@@ -44,7 +48,7 @@ namespace SteamAchievements.Application.Controllers
         {
             if (!await _authenticationService.ValidateUser(user))
             {
-                _logger.LogWarn($"{nameof(Authenticate)}: Authentication failed. Wrong user name or password."); 
+                _logger.LogWarning($"{nameof(Authenticate)}: Authentication failed. Wrong user name or password."); 
                 return Unauthorized();
             }
 

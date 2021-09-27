@@ -4,14 +4,15 @@ using SteamAchievements.Application.Services.GameService;
 using SteamAchievements.Infrastructure.Contracts;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace SteamAchievements.Application.ActionFilters
 {
     public class ValidateGameExistsAttribute : IAsyncActionFilter
     {
         private readonly IGameService _gameService;
-        private readonly ILoggerManager _logger;
-        public ValidateGameExistsAttribute(IGameService gameService, ILoggerManager logger)
+        private readonly ILogger<ValidateGameExistsAttribute> _logger;
+        public ValidateGameExistsAttribute(IGameService gameService, ILogger<ValidateGameExistsAttribute> logger)
         {
             _logger = logger;
             _gameService = gameService;
@@ -24,7 +25,7 @@ namespace SteamAchievements.Application.ActionFilters
             
             if (game == null)
             {
-                _logger.LogInfo($"Game with id: {gameId} doesn't exist in the database.");
+                _logger.LogInformation($"Game with id: {gameId} doesn't exist in the database.");
                 context.Result = new NotFoundResult();
                 return;
             }

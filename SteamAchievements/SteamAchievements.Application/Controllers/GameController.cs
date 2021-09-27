@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SteamAchievements.Application.ActionFilters;
 using SteamAchievements.Application.DataTransferObjects.Games;
 using SteamAchievements.Application.Services.GameService;
 using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using SteamAchievements.Infrastructure.Contracts;
 
 namespace SteamAchievements.Application.Controllers
 {
@@ -15,12 +15,13 @@ namespace SteamAchievements.Application.Controllers
     public class GameController : ControllerBase
     {
         private readonly IGameService _gameService;
-        private readonly ILoggerManager _logger;
+        private readonly ILogger<GameController> _logger;
 
-        public GameController(IGameService gameService, ILoggerManager logger)
+        public GameController(IGameService gameService, ILogger<GameController> logger)
         {
             _gameService = gameService;
             _logger = logger;
+            _logger.LogDebug("NLog injected into GameController");
         }
 
         [HttpGet("{gameId}", Name = "GetGameForDeveloper"), Authorize(Roles = "Manager")]
@@ -28,7 +29,6 @@ namespace SteamAchievements.Application.Controllers
         public IActionResult GetGameForDeveloper(Guid developerId, Guid gameId)
         {
             var game = _gameService.CurrentGameDto;
-
             return Ok(game);
         }
 

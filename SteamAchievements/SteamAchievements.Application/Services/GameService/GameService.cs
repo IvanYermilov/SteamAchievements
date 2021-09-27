@@ -9,7 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-    
+using Microsoft.Extensions.Logging;
+
 namespace SteamAchievements.Application.Services.GameService
 {
     public class GameService : IGameService
@@ -18,11 +19,11 @@ namespace SteamAchievements.Application.Services.GameService
         public GameDto CurrentGameDto => _mapper.Map<GameDto>(CurrentGame);
         private readonly IRepositoryManager _repository;
         private readonly IDeveloperService _developerService;
-        private readonly ILoggerManager _logger;
+        private readonly ILogger<GameService> _logger;
         private readonly IMapper _mapper;
 
-        public GameService(IRepositoryManager repository, IDeveloperService developerService, 
-            ILoggerManager logger, IMapper mapper)
+        public GameService(IRepositoryManager repository, IDeveloperService developerService,
+            ILogger<GameService> logger, IMapper mapper)
         {
             _repository = repository;
             _developerService = developerService;   
@@ -71,24 +72,6 @@ namespace SteamAchievements.Application.Services.GameService
             _mapper.Map(gameToPatch, CurrentGame);
             await _repository.SaveAsync();
         }
-        //public async void PartiallyUpdateGame(JsonPatchDocument<GameForManipulationDto> patchDoc)
-        //{
-        //    var results = new List<ValidationResult>();
-        //    var context = new System.ComponentModel.DataAnnotations.ValidationContext(CurrentGame, null, null);
-        //    var gameToPatch = _mapper.Map<GameForManipulationDto>(CurrentGame);
-        //    var actionContextAccessor = _serviceProvider.GetService<IActionContextAccessor>();
-        //    var actionContext = actionContextAccessor.ActionContext;
-
-        //    patchDoc.ApplyTo(gameToPatch, actionContext?.ModelState);
-        //    Validator.TryValidateObject(CurrentGame, context, results);
-        //    if (!actionContext.ModelState.IsValid)
-        //    {
-        //        _logger.LogError("Invalid model state for the patch document");
-        //        return;
-        //    }
-        //    _mapper.Map(gameToPatch, CurrentGame);
-        //    await _repository.SaveAsync();
-        //}
 
         public async void DetachGameForDeveloper(Guid developerId)
         {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 using SteamAchievements.Application.Services.DeveloperService;
-using SteamAchievements.Infrastructure.Contracts;
 using System;
 using System.Threading.Tasks;
 
@@ -9,10 +9,11 @@ namespace SteamAchievements.Application.ActionFilters
 {
     public class ValidateDeveloperForGameExistsAttribute : IAsyncActionFilter
     {
-        private readonly ILoggerManager _logger;
+        private readonly ILogger<ValidateDeveloperForGameExistsAttribute> _logger;
         private readonly IDeveloperService _developerService;
 
-        public ValidateDeveloperForGameExistsAttribute(ILoggerManager logger, IDeveloperService developerService)
+        public ValidateDeveloperForGameExistsAttribute(ILogger<ValidateDeveloperForGameExistsAttribute> logger,
+            IDeveloperService developerService)
         {
             _logger = logger;
             _developerService = developerService;
@@ -27,7 +28,7 @@ namespace SteamAchievements.Application.ActionFilters
 
             if (developer == null)
             {
-                _logger.LogInfo($"Developer with id: {id} doesn't exist in the database.");
+                _logger.LogInformation($"Developer with id: {id} doesn't exist in the database.");
                 context.Result = new NotFoundResult();
                 return;
             }

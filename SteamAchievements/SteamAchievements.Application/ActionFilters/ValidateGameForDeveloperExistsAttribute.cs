@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 using SteamAchievements.Application.Services.DeveloperService;
 using SteamAchievements.Application.Services.GameService;
-using SteamAchievements.Infrastructure.Contracts;
 using System;
 using System.Threading.Tasks;
 
@@ -10,13 +10,13 @@ namespace SteamAchievements.Application.ActionFilters
 {
     public class ValidateGameForDeveloperExistsAttribute : IAsyncActionFilter
     {
-        private readonly ILoggerManager _logger;
+        private readonly ILogger<ValidateGameForDeveloperExistsAttribute> _logger;
         private readonly IGameService _gameService;
         private readonly IDeveloperService _developerService;
 
 
-        public ValidateGameForDeveloperExistsAttribute(ILoggerManager logger, IGameService gameService,
-            IDeveloperService developerService)
+        public ValidateGameForDeveloperExistsAttribute(ILogger<ValidateGameForDeveloperExistsAttribute> logger
+            , IGameService gameService, IDeveloperService developerService)
         {
             _logger = logger;
             _gameService = gameService;
@@ -33,7 +33,7 @@ namespace SteamAchievements.Application.ActionFilters
 
             if (developer == null)
             {
-                _logger.LogInfo($"Developer with id: {developerId} doesn't exist in the database.");
+                _logger.LogInformation($"Developer with id: {developerId} doesn't exist in the database.");
 
                 context.Result = new NotFoundResult();
                 return;
@@ -45,7 +45,7 @@ namespace SteamAchievements.Application.ActionFilters
 
             if (game == null)
             {
-                _logger.LogInfo($"Game with id: {gameId} doesn't exist in the database.");
+                _logger.LogInformation($"Game with id: {gameId} doesn't exist in the database.");
                 context.Result = new NotFoundResult();
                 return;
             }

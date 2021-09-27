@@ -1,9 +1,6 @@
 ﻿using AspNetCoreRateLimit;
-using SteamAchievements.Infrastructure.Contracts;
-using SteamAchievements.Infrastructure.Entities;
-using SteamAchievements.Infrastructure.Entities.Models;
-using SteamAchievements.Infrastructure;
 using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,21 +9,22 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using SteamAchievements.Application.Services.AchievementsService;
 using SteamAchievements.Application.Services.AuthenticationService;
 using SteamAchievements.Application.Services.DeveloperService;
 using SteamAchievements.Application.Services.GameService;
 using SteamAchievements.Application.Services.RepositoryManager;
 using SteamAchievements.Application.Services.UserService;
+using SteamAchievements.Infrastructure.Entities;
+using SteamAchievements.Infrastructure.Entities.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 
 namespace SteamAchievements.Extensions
 {
@@ -44,8 +42,6 @@ namespace SteamAchievements.Extensions
         public static void ConfigureIISIntegration(this IServiceCollection services) =>
             services.Configure<IISOptions>(options => { });
 
-        public static void ConfigureLoggerService(this IServiceCollection services) =>
-            services.AddScoped<ILoggerManager, LoggerManager>();
 
         public static void ConfigureSqlContext(this IServiceCollection services,
             IConfiguration configuration) =>
