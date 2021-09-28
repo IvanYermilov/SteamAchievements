@@ -36,6 +36,12 @@ namespace SteamAchievements.Application.Services.GameService
             return await _repository.Game.GetGameByIdAsync(gameId, true);
         }
 
+        public async Task<IEnumerable<GameDto>> GetGamesForUserAsync(string userId)
+        {
+            var games = await _repository.Game.GetGamesForUserAsync(userId,trackChanges:false);
+            return _mapper.Map<IEnumerable<GameDto>>(games);
+        }
+
         public async Task<Game> GetGameForDeveloperAsync(Guid developerId, Guid gameId, bool trackChanges)
         {
             var game = await _repository.Game.GetGameAsync(developerId, gameId, trackChanges);

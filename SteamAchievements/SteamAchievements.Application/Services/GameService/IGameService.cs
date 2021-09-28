@@ -13,6 +13,7 @@ namespace SteamAchievements.Application.Services.GameService
         public GameDto CurrentGameDto { get; }
         public Task<Game> GetGameByIdAsync(Guid gameId);
         public Task<Game> GetGameForDeveloperAsync(Guid developerId, Guid gameId, bool trackChanges);
+        public Task<IEnumerable<GameDto>> GetGamesForUserAsync(string userId);
         public Task<IEnumerable<GameDto>> GetGamesForDeveloper();
         public Task<GameDto> CreateGameForDeveloper(GameForManipulationDto game);
         public void AddGameForDeveloper();

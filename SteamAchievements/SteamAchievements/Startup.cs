@@ -47,12 +47,7 @@ namespace SteamAchievements
             //services.AddCustomMediaTypes();
             services.AddHttpContextAccessor();
             services.ConfigureServices();
-            services.AddScoped<ValidationFilterAttribute>();
-            services.AddScoped<ValidateDeveloperExistsAttribute>();
-            services.AddScoped<ValidateGameForDeveloperExistsAttribute>();
-            services.AddScoped<ValidateDeveloperForGameExistsAttribute>();
-            services.AddScoped<ValidateAchievementForGameExistsAttribute>();
-            services.AddScoped<ValidateGameExistsAttribute>();
+            services.ConfigureActiveFilters();
             //services.AddScoped<ValidateMediaTypeAttribute>();
             //services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
             //services.AddScoped<EmployeeLinks>();

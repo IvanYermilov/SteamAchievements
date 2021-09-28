@@ -12,8 +12,6 @@ namespace SteamAchievements
     {
         public static void Main(string[] args)
         {
-            //var logger = NLogBuilder.ConfigureNLog(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"))
-            //    .GetCurrentClassLogger();
             var logger = LogManager
                 .LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"))
                 .GetCurrentClassLogger();

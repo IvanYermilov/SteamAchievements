@@ -40,6 +40,14 @@ namespace SteamAchievements.Application.Controllers
             return Ok(games);
         }
 
+        [HttpGet, Authorize]
+        [ServiceFilter(typeof(ValidateDeveloperExistsAttribute))]
+        public async Task<IActionResult> GetGameForAuthenticatedDeveloper(Guid developerId)
+        {
+            var games = await _gameService.GetGamesForDeveloper();
+            return Ok(games);
+        }
+
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ServiceFilter(typeof(ValidateDeveloperForGameExistsAttribute))]

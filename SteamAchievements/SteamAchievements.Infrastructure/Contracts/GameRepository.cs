@@ -22,8 +22,15 @@ namespace SteamAchievements.Infrastructure.Contracts
         public async Task<IEnumerable<Game>> GetGamesForDeveloper(Guid devId)
         {
             return await RepositoryContext.Games.Where(g => g.Developers.Any(d => d.Id == devId)).Include(g => g.Developers).ToListAsync();
-        } 
-        
+        }
+
+        public async Task<IEnumerable<Game>> GetGamesForUserAsync(string userId, bool trackChanges)
+        {
+            return await FindByCondition(g => g.Users.Any(u => u.Id == userId), trackChanges)
+                .OrderBy(g => g.Name)
+                .ToListAsync();
+        }
+
         public async Task<Game> GetGameByIdAsync(Guid gameId, bool trackChanges)
         {
             return await FindByCondition(g => g.Id == gameId, trackChanges)

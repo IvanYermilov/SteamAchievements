@@ -25,6 +25,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using SteamAchievements.Application.ActionFilters;
 
 namespace SteamAchievements.Extensions
 {
@@ -240,6 +241,17 @@ namespace SteamAchievements.Extensions
             services.AddScoped<IDeveloperService, DeveloperService>();
             services.AddScoped<IGameService, GameService>();
             services.AddScoped<IUserService, UserService>();
+        }
+
+        public static void ConfigureActiveFilters(this IServiceCollection services)
+        {
+            services.AddScoped<ValidationFilterAttribute>();
+            services.AddScoped<ValidateDeveloperExistsAttribute>();
+            services.AddScoped<ValidateGameForDeveloperExistsAttribute>();
+            services.AddScoped<ValidateDeveloperForGameExistsAttribute>();
+            services.AddScoped<ValidateAchievementForGameExistsAttribute>();
+            services.AddScoped<ValidateGameExistsAttribute>();
+            services.AddScoped<ValidateDeveloperExistsAuthAttribute>();
         }
     }
 }
