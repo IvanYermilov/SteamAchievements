@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SteamAchievements.Infrastructure.Entities.Configuration;
 using SteamAchievements.Infrastructure.Entities.Models;
@@ -10,6 +11,9 @@ namespace SteamAchievements.Infrastructure.Entities
         public RepositoryContext(DbContextOptions options) : base(options)
         {
         }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+            => optionsBuilder.LogTo(Console.WriteLine);
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

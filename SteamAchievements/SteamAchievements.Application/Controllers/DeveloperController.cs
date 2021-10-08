@@ -51,7 +51,7 @@ namespace SteamAchievements.Application.Controllers
         {
             var createdDeveloper = await _developerService.CreateDeveloper(developer);
 
-            return CreatedAtRoute("DeveloperById", new { id = createdDeveloper.Id }, createdDeveloper);
+            return CreatedAtRoute("DeveloperById", new { developerId = createdDeveloper.Id }, createdDeveloper);
         }
 
         [HttpDelete("{developerId}")]
