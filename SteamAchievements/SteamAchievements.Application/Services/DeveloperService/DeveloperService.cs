@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace SteamAchievements.Application.Services.DeveloperService
 {
@@ -17,12 +18,14 @@ namespace SteamAchievements.Application.Services.DeveloperService
         private readonly IRepositoryManager _repository;
         private readonly ILogger<DeveloperService> _logger;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContext;
 
-        public DeveloperService(IRepositoryManager repository, ILogger<DeveloperService> logger, IMapper mapper)
+        public DeveloperService(IRepositoryManager repository, ILogger<DeveloperService> logger, IMapper mapper, IHttpContextAccessor httpContext)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
+            _httpContext = httpContext;
         }
 
         public async Task<Developer> GetDeveloperByIdAsync(Guid developerId, bool trackChanges)
@@ -56,6 +59,7 @@ namespace SteamAchievements.Application.Services.DeveloperService
 
         public async Task<IEnumerable<DeveloperDto>> GetAllDevelopers(bool trackChanges)
         {
+            var user = _httpContext.HttpContext.User;
             var developers = await _repository.Developer.GetAllDevelopersAsync(trackChanges: false);
             if (developers == null)
             {
